@@ -1,5 +1,5 @@
 import ruleComponents from "./rules/items";
-import RuleSettingItemTemplate from "./rules/RuleSettingItemTemplate"
+import ItemTemplate from "./rules/ItemTemplate"
 
 let loader = {};
 loader.install = function (Vue, options) {
@@ -13,7 +13,7 @@ loader.install = function (Vue, options) {
     switch (this.editorType) {
         case "rule":
             registerViews(ruleComponents);
-            Vue.component("ItemTemplate", RuleSettingItemTemplate);
+            Vue.component("ItemTemplate", ItemTemplate);
             break;
         case "control":
             //registerViews(import("./controls/items/index"));

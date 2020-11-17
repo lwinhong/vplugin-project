@@ -17,6 +17,7 @@ const metaData = {
             },
             dropdownType: {
                 type: "string",
+                editor: "dropdown",
                 dropdownData: [
                     { value: "good", display: "好" },
                     { value: "bad", display: "坏" },

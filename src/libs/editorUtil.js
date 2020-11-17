@@ -51,7 +51,7 @@ editorUtil.getObjectFirstObj = function (obj) {
 editorUtil.IsTextEditor = function (obj) {
     //obj = _getEditorConfig(obj);
     if (obj) {
-        return obj.type == "string";
+        return obj.type == "string" && !obj.editor;
     }
     return false;
 }
@@ -59,7 +59,7 @@ editorUtil.IsTextEditor = function (obj) {
 editorUtil.IsBooleanEditor = function (obj) {
     //obj = _getEditorConfig(obj);
     if (obj) {
-        return obj.type == "boolean";
+        return obj.type == "boolean" && !obj.editor;
     }
     return false;
 }
@@ -67,15 +67,20 @@ editorUtil.IsBooleanEditor = function (obj) {
 editorUtil.IsDateTimeEditor = function (obj) {
     //const obj = _getEditorConfig(editorConfigData);
     if (obj) {
-        return obj.type == "dateTime";
+        return obj.type == "dateTime" && !obj.editor;
     }
     return false;
 }
 
+/**
+ * 是否为下拉选择
+ * @param {} obj 
+ */
 editorUtil.IsSelectEditor = function (obj) {
     //const obj = _getEditorConfig(obj);
     if (obj) {
-        return obj.type == "string" && obj.dropdownData;
+        //return obj.type == "string" && obj.dropdownData;
+        return obj.editor == "dropdown"
     }
     return false;
 }
@@ -83,7 +88,7 @@ editorUtil.IsSelectEditor = function (obj) {
 editorUtil.IsNumberEditor = function (obj) {
     //obj = _getEditorConfig(obj);
     if (obj) {
-        return obj.type == "integer";
+        return obj.type == "integer" && !obj.editor;
     }
     return false;
 }
@@ -95,7 +100,7 @@ editorUtil.IsNumberEditor = function (obj) {
 editorUtil.IsExpressionEditor = function (obj) {
     //const obj = _getEditorConfig(obj);
     if (obj) {
-        return obj.type == "string" && obj.editor == "expression";
+        return obj.editor == "expression";
     }
     return false;
 }

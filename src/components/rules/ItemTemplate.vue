@@ -10,8 +10,10 @@
       :class="{ 'item-contSelected': isSelected || isHover }"
     >
       <div class="item-title">
-        <span class="item-name">{{ itemData.name }}:</span>
-        <span>{{ itemData.description }}</span>
+        <span class="item-name">{{ itemData.name }}</span>
+        <span v-if="itemData.description"
+          >{{ `：${itemData.description}` }}</span
+        >
         <slot name="header" :headerData="itemData" />
       </div>
       <div class="item-detail">

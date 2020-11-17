@@ -21,7 +21,6 @@
       v-if="validateMsg"
       style="color: red"
     ></span> -->
-    <!-- <Alert type="error" show-icon  v-text="validateMsg"  v-if="validateMsg" slot="validate"></Alert> -->
   </item-template>
 </template>
 
