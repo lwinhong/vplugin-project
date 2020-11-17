@@ -32,6 +32,11 @@ editorUtil.getQueryString = function () {
     return args
 }
 
+editorUtil.getEditorType = () => {
+    const qs = editorUtil.getQueryString();
+    return qs.editorType || "rule";
+}
+
 editorUtil.getObjectFirstKey = function (obj) {
     return util.getObjectFirstKey(obj);
 }

@@ -1,30 +1,25 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue';
-
 import ViewUI from "view-design";
 import 'view-design/dist/styles/iview.css';
 import store from './store';
 import editorUtil from "./libs/editorUtil";
+import viewLoader from "./components/viewLoader";
 
 Vue.use(ViewUI);
 Vue.config.productionTip = false
-Vue.config.errorHandler = function (err, vm, info) {
-  console.error(arguments)
-}
+Vue.config.errorHandler = (err, vm, info) => console.error(arguments);
+
 Vue.prototype.$editorUtil = editorUtil;
 
+const editorType = editorUtil.getEditorType();
+Vue.prototype.$editorType = editorType;
+viewLoader.editorType = editorType;
+Vue.use(viewLoader);
+
 import { createNamespacedHelpers } from "vuex";
-
 const { mapActions, mapState } = createNamespacedHelpers("ruleEditorStore");
-const qs = editorUtil.getQueryString();
-const editorType = qs.editorType || "rule";
 
-import viewLoader from "./components/viewLoader";
-viewLoader.loadItemViews(editorType);
-
-//import router from './router'
-//import test from "./test/test";
+import test from "./test/test";
 import App from './App';
 const app = new Vue({
   el: '#app',
@@ -48,9 +43,10 @@ const app = new Vue({
   mounted() {
     console.log("mounted")
     setTimeout(() => {
-      //_onLoad(test.metaData, test.userData);
       if (window.vPlugin) {
         window.vPlugin.execute("appMounted");
+      } else {
+        _onLoad(test.metaData, test.userData);
       }
     }, 100);
   }

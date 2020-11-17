@@ -19,7 +19,13 @@
       </div>
       <div class="item-footer">
         <slot name="footer"></slot>
-        <slot name="validate"></slot>
+        <slot name="validate">
+          <span
+            class="item-validate"
+            v-text="validateMsg"
+            v-if="validateMsg"
+          ></span>
+        </slot>
       </div>
     </div>
     <div class="setting-toolbar-container" v-show="isSelected || isHover">
@@ -59,11 +65,23 @@ export default {
   },
   props: {
     itemData: [Object, Array],
+    value: [Object, Array, String, Number, Boolean],
   },
   data() {
     return {
       isHover: false,
+      validateMsg: null,
     };
+  },
+  watch: {
+    value(newValue, oldValue) {
+      if (this.itemData.valueValidation) {
+        this.validateMsg = this.$editorUtil.validate(
+          this.itemData.valueValidation,
+          newValue
+        );
+      }
+    },
   },
 };
 </script>

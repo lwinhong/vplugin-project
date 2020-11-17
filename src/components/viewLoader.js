@@ -1,40 +1,8 @@
-//import Vue from "vue";
-//存动态的，暂时先不这样做
-// const loadItemViewsAsync = function (editorType, callBack) {
-//     let currentComponents = {};
-//     const _this = this;
-//     function registerViews(p) {
-//         p.then(result => {
-//             let components = result.default;
-//             for (const key in components) {
-//                 if (components.hasOwnProperty(key)) {
-//                     Vue.component(key, components[key]);
-//                 }
-//             }
-//         }).catch(error => {
-//             console.error(error)
-//         }).finally(() => {
-//             callBack(_this.currentComponents);
-//         });
-//     }
-//     switch (editorType) {
-//         case "rule":
-//             registerViews(import("./rules/items/index"));
-//             break;
-//         case "control":
-//             registerViews(import("./controls/items/index"));
-//             break;
-//         default:
-//             callBack(_this.currentComponents);
-//             break;
-//     }
-// }
-
 import ruleComponents from "./rules/items";
-import Vue from "vue";
+import RuleSettingItemTemplate from "./rules/RuleSettingItemTemplate"
 
-const loadItemViews = function (editorType) {
-    
+let loader = {};
+loader.install = function (Vue, options) {
     function registerViews(components) {
         for (const key in components) {
             if (components.hasOwnProperty(key)) {
@@ -42,20 +10,17 @@ const loadItemViews = function (editorType) {
             }
         }
     }
-    switch (editorType) {
+    switch (this.editorType) {
         case "rule":
             registerViews(ruleComponents);
+            Vue.component("ItemTemplate", RuleSettingItemTemplate);
             break;
         case "control":
             //registerViews(import("./controls/items/index"));
             break;
         default:
-            
             break;
     }
 }
 
-export default {
-    loadItemViews
-}
-
+export default loader;

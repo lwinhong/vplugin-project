@@ -1,13 +1,15 @@
 <template>
-  <item-template :itemData="itemData" @onSettingClick="onSettingClick">
-    <!-- <template v-slot:header ="scope">
-        {{scope}}
-    </template> -->
+  <item-template
+    :itemData="itemData"
+    @onSettingClick="onSettingClick"
+    :value="value"
+  >
     <template v-slot:content>
       <Input
         v-model="value"
-        placeholder="Enter something..."
+        placeholder="请输入..."
         style="width: 300px"
+        readonly
       >
         <Button slot="append" icon="md-open" @click="onExpressionEdit" />
       </Input>
@@ -16,10 +18,10 @@
 </template>
 
 <script>
-import ItemTemplate from "../RuleSettingItemTemplate";
+//import ItemTemplate from "../RuleSettingItemTemplate";
 export default {
   // import引入的组件需要注入到对象中才能使用
-  components: { ItemTemplate },
+  //components: { ItemTemplate },
   data() {
     // 这里存放数据
     return {
@@ -38,7 +40,18 @@ export default {
       return result;
     },
     onExpressionEdit() {
-      alert("表达式");
+      if (window.vPlugin) {
+        const _this = this;
+        let callBack = function callback(returnValue) {
+          _this.value = returnValue;
+        };
+        window.vPlugin.execute(
+          "openExpression",
+          this.value,
+          this.itemData.type,
+          callBack
+        );
+      }
     },
     onSettingClick(cmd) {
       switch (cmd) {

@@ -68,6 +68,7 @@ export default {
       --theme-content-color: #585858;
       --theme-footer-color: var(--theme-content-color);
       --theme-box-padding: 16px;
+      --theme-validate-color:red;
     }
 
     body {
@@ -115,6 +116,11 @@ export default {
       margin-top: 8px;
       font-size: var(--theme-font-size);
       color: var(--theme-footer-color);
+    }
+
+    .item-validate {
+      color: var(--theme-validate-color);
+      /* padding-left: 7px; */
     }
 
     .setting-toolbar-container {
