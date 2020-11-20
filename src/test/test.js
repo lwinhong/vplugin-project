@@ -12,7 +12,7 @@ const metaData = {
             booleanType: {
                 type: "boolean",
                 name: "你就是布尔",
-                default: true,
+                default: null,
                 description: "确定是否要生成是劳动法卡开房记录缝即可了",
             },
             dropdownType: {
@@ -48,6 +48,13 @@ const metaData = {
                 editor: "expression",
                 name: "我是表达式",
                 description: "你是字符串类型",
+            },
+            entityType: {
+                type: "string",
+                default: "实体",
+                editor: "entity",
+                name: "我是实体",
+                description: "我是实体",
             },
         }
     }

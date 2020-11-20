@@ -1,8 +1,6 @@
 import lodash from "lodash"
 
-let util = {
-
-};
+let util = {};
 util.title = function (title) {
     title = title ? title + ' - Home' : 'VPlugin';
     window.document.title = title;

@@ -2,24 +2,42 @@
   <div class="box">
     <Row>
       <Col span="24" v-for="(val, name, index) in ruleMetaData" :key="index">
-        <template v-if="editorUtil.IsBooleanEditor(val)">
-          <rule-setting-checkbox :itemData="val" :ref="getItemKey(index)" />
-        </template>
-        <template v-else-if="editorUtil.IsSelectEditor(val)">
-          <rule-setting-select :itemData="val" :ref="getItemKey(index)" />
-        </template>
-        <template v-else-if="editorUtil.IsDateTimeEditor(val)">
-          <rule-setting-date :itemData="val" :ref="getItemKey(index)" />
-        </template>
-        <template v-else-if="editorUtil.IsExpressionEditor(val)">
-          <rule-setting-expression :itemData="val" :ref="getItemKey(index)" />
-        </template>
-        <template v-else-if="editorUtil.IsNumberEditor(val)">
-          <rule-setting-number :itemData="val" :ref="getItemKey(index)" />
-        </template>
-        <template v-else>
-          <RuleSettingInput :itemData="val" :ref="getItemKey(index)" />
-        </template>
+        <RuleSettingCheckbox
+          v-if="editorUtil.IsBooleanEditor(val)"
+          :itemData="val"
+          :ref="getItemKey(index)"
+        />
+        <RuleSettingSelect
+          v-else-if="editorUtil.IsSelectEditor(val)"
+          :itemData="val"
+          :ref="getItemKey(index)"
+        />
+        <RuleSettingDate
+          v-else-if="editorUtil.IsDateTimeEditor(val)"
+          :itemData="val"
+          :ref="getItemKey(index)"
+        />
+        <RuleSettingExpression
+          v-else-if="editorUtil.IsExpressionEditor(val)"
+          :itemData="val"
+          :ref="getItemKey(index)"
+        />
+        <RuleSettingNumber
+          v-else-if="editorUtil.IsNumberEditor(val)"
+          :itemData="val"
+          :ref="getItemKey(index)"
+        />
+        <RuleSettingCustom
+          v-else-if="editorUtil.IsCustomEditor(val)"
+          :itemData="val"
+          :ref="getItemKey(index)"
+        />
+        <RuleSettingEntity
+          :itemData="val"
+          v-else-if="editorUtil.IsEntityEditor(val)"
+          :ref="getItemKey(index)"
+        />
+        <RuleSettingInput v-else :itemData="val" :ref="getItemKey(index)" />
       </Col>
     </Row>
     <!-- <Spin size="large" fix v-if="!allDone"></Spin> -->
@@ -43,7 +61,7 @@ export default {
     validate() {
       let result = [];
       let index = 0;
-      //收集各个item的值,生成指定的数据格式
+      //校验各个item的值
       for (const key in this.ruleMetaData) {
         if (this.ruleMetaData.hasOwnProperty(key)) {
           const refName = this.getItemKey(index);
@@ -51,8 +69,10 @@ export default {
           if (vueInstance) {
             let message = null;
             if (vueInstance.validateValue) {
+              //自己校验
               message = vueInstance.validateValue();
             } else if (vueInstance.itemData) {
+              //公共统一的校验
               message = this.$editorUtil.validate(
                 vueInstance.itemData.valueValidation,
                 vueInstance.value
@@ -96,7 +116,7 @@ export default {
     },
     getItemObj(item, name, index) {
       item.index = index;
-      item.editorType = name;
+      item.editorKey = name;
       return item;
     },
   },

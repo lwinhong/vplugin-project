@@ -11,7 +11,7 @@ loader.install = function (Vue, options) {
         }
     }
     switch (this.editorType) {
-        case "rule":
+        case "rule"://注册规则要用的vue组件
             registerViews(ruleComponents);
             Vue.component("ItemTemplate", ItemTemplate);
             break;

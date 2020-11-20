@@ -37,7 +37,7 @@ export default {
   methods: {
     save() {
       let result = {};
-      result[this.itemData.editorType] = this.value;
+      result[this.itemData.editorKey] = this.value;
       //result.dataCheck = true;
       return result;
     },

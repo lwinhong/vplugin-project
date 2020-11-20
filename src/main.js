@@ -19,7 +19,7 @@ Vue.use(viewLoader);
 import { createNamespacedHelpers } from "vuex";
 const { mapActions, mapState } = createNamespacedHelpers("ruleEditorStore");
 
-import test from "./test/test";
+//import test from "./test/test";
 import App from './App';
 const app = new Vue({
   el: '#app',
@@ -46,7 +46,7 @@ const app = new Vue({
       if (window.vPlugin) {
         window.vPlugin.execute("appMounted");
       } else {
-        _onLoad(test.metaData, test.userData);
+        //_onLoad(test.metaData, test.userData);
       }
     }, 100);
   }
@@ -122,6 +122,10 @@ const validate = (showMsg) => {
   return "";
 }
 
+const getSaveData = () => {
+  return save();
+}
+
 export {
-  onLoad, save, validate
+  onLoad, save, validate, getSaveData
 }

@@ -4,9 +4,6 @@
     @onSettingClick="onSettingClick"
     :value="value"
   >
-    <!-- <template v-slot:header ="scope">
-        {{scope}}
-    </template> -->
     <template v-slot:content>
       <Input
         v-model="value"
@@ -15,12 +12,6 @@
         clearable
       />
     </template>
-    <!-- <span
-      slot="validate"
-      v-text="validateMsg"
-      v-if="validateMsg"
-      style="color: red"
-    ></span> -->
   </item-template>
 </template>
 
@@ -35,6 +26,7 @@ export default {
     return {
       value: "",
       //validateMsg: null,
+      devHtml: "",
     };
   },
   props: {
@@ -42,11 +34,12 @@ export default {
   },
   mounted() {
     this.value = this.itemData.userData || this.itemData.default || "";
+    //this.devHtml="<button>132</button>"
   },
   methods: {
     save() {
       let result = {};
-      result[this.itemData.editorType] = this.value;
+      result[this.itemData.editorKey] = this.value;
       //result.dataCheck = true;
       return result;
     },

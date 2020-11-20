@@ -25,20 +25,20 @@ export default {
     itemData: [Object, Array],
   },
   mounted() {
-    this.value = this.itemData.userData || this.itemData.default || false;
+    this.value = Boolean(this.itemData.userData || this.itemData.default);
   },
   // 方法集合
   methods: {
     save() {
       let result = {};
-      result[this.itemData.editorType] = this.value;
+      result[this.itemData.editorKey] = this.value;
       //result.dataCheck = true;
       return result;
     },
     onSettingClick(cmd) {
       switch (cmd) {
         case "reset":
-          this.value = this.itemData.default;
+          this.value = Boolean(this.itemData.default);
           break;
       }
     },

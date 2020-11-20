@@ -11,7 +11,7 @@
         style="width: 300px"
         readonly
       >
-        <Button slot="append" icon="md-open" @click="onExpressionEdit" />
+        <Button slot="append" icon="md-open" @click="onPopup" />
       </Input>
     </template>
   </item-template>
@@ -26,6 +26,7 @@ export default {
     // 这里存放数据
     return {
       value: "",
+      popupType:"openExpression"
     };
   },
   props: {
@@ -35,18 +36,19 @@ export default {
   methods: {
     save() {
       let result = {};
-      result[this.itemData.editorType] = this.value;
+      result[this.itemData.editorKey] = this.value;
       //result.dataCheck = true;
       return result;
     },
-    onExpressionEdit() {
+    onPopup() {
+      console.log(this.popupType);
       if (window.vPlugin) {
         const _this = this;
         let callBack = function callback(returnValue) {
           _this.value = returnValue;
         };
         window.vPlugin.execute(
-          "openExpression",
+          this.popupType,
           this.value,
           this.itemData.type,
           callBack

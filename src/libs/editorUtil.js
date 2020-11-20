@@ -2,14 +2,6 @@ import util from "../libs/util";
 
 let editorUtil = {};
 
-const _getEditorConfig = function (editorConfigData) {
-    const objKey = util.getObjectFirstKey(editorConfigData);
-    if (objKey) {
-        return editorConfigData[objKey];
-    }
-    return null;
-}
-
 /**
  * 获取url的参数
  * @returns {} 
@@ -32,15 +24,26 @@ editorUtil.getQueryString = function () {
     return args
 }
 
+/**
+ * 获取编辑器类型（从url的 get 参数中获取）
+ */
 editorUtil.getEditorType = () => {
     const qs = editorUtil.getQueryString();
     return qs.editorType || "rule";
 }
 
+/**
+ * 获取目标对象的第一个子对象的key
+ * @param {目标对象} obj 
+ */
 editorUtil.getObjectFirstKey = function (obj) {
     return util.getObjectFirstKey(obj);
 }
 
+/**
+ * 获取目标对象的第一个子对象
+ * @param {目标对象} obj 
+ */
 editorUtil.getObjectFirstObj = function (obj) {
     const key = util.getObjectFirstKey(obj);
     if (key)
@@ -48,6 +51,10 @@ editorUtil.getObjectFirstObj = function (obj) {
     return null;
 }
 
+/**
+ * item是否使用文本类型编辑器
+ * @param {item数据} obj 
+ */
 editorUtil.IsTextEditor = function (obj) {
     //obj = _getEditorConfig(obj);
     if (obj) {
@@ -56,6 +63,10 @@ editorUtil.IsTextEditor = function (obj) {
     return false;
 }
 
+/**
+ * item是否使用布尔类型编辑器
+ * @param {item数据} obj 
+ */
 editorUtil.IsBooleanEditor = function (obj) {
     //obj = _getEditorConfig(obj);
     if (obj) {
@@ -64,6 +75,10 @@ editorUtil.IsBooleanEditor = function (obj) {
     return false;
 }
 
+/**
+ * item是否使用日期类型编辑器
+ * @param {item数据} obj 
+ */
 editorUtil.IsDateTimeEditor = function (obj) {
     //const obj = _getEditorConfig(editorConfigData);
     if (obj) {
@@ -85,6 +100,10 @@ editorUtil.IsSelectEditor = function (obj) {
     return false;
 }
 
+/**
+ * item是否使用数字类型编辑器
+ * @param {item数据} obj 
+ */
 editorUtil.IsNumberEditor = function (obj) {
     //obj = _getEditorConfig(obj);
     if (obj) {
@@ -105,6 +124,35 @@ editorUtil.IsExpressionEditor = function (obj) {
     return false;
 }
 
+/**
+ * 是否为表达式编辑器
+ * @param {*} obj 
+ */
+editorUtil.IsEntityEditor = function (obj) {
+    //const obj = _getEditorConfig(obj);
+    if (obj) {
+        return obj.editor == "entity";
+    }
+    return false;
+}
+
+/**
+ * 是否为表达式编辑器
+ * @param {*} obj 
+ */
+editorUtil.IsCustomEditor = function (obj) {
+    //const obj = _getEditorConfig(obj);
+    if (obj) {
+        return obj.editor == "customEditor";
+    }
+    return false;
+}
+
+/**
+ * 将用户配置数据合并元数据
+ * @param {元数据} editorMeta 
+ * @param {用户配置数据} userData 
+ */
 editorUtil.mergeData = function (editorMeta, userData) {
     if (editorMeta) {
         let index = 0;
@@ -115,13 +163,18 @@ editorUtil.mergeData = function (editorMeta, userData) {
                     meta.userData = userData[key]
                 }
                 meta.index = index;
-                meta.editorType = key;
+                meta.editorKey = key;
                 index++;
             }
         }
     }
 }
 
+/**
+ * 值校验
+ * @param {校验描述信息} valueValidation 
+ * @param {校验值} targetValue 
+ */
 editorUtil.validate = (valueValidation, targetValue) => {
     if (valueValidation) {
         for (let i = 0; i < valueValidation.length; i++) {
