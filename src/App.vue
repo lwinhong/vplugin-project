@@ -60,74 +60,78 @@ export default {
 
 <style>
 :root {
-      --theme-font: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, \\5FAE\8F6F\96C5\9ED1, Arial, sans-serif;
-      --theme-font-size: 12px;
-      --theme-bg: #fff;
-      --theme-bg-over: #f2f2f2;
-      --theme-title-color: #262626;
-      --theme-content-color: #585858;
-      --theme-footer-color: var(--theme-content-color);
-      --theme-box-padding: 16px;
-      --theme-validate-color:red;
-    }
+    --theme-font: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, \\5FAE\8F6F\96C5\9ED1, Arial, sans-serif;
+    --theme-font-size: 11px;
+    --theme-bg: #fff;
+    --theme-bg-over: #f2f2f2;
+    --theme-title-color: #262626;
+    --theme-content-color: #585858;
+    --theme-footer-color: var(--theme-content-color);
+    --theme-box-padding: 16px;
+    --theme-validate-color: red
+}
 
-    body {
-      background: var(--theme-bg);
-    }
+body {
+    background: var(--theme-bg)
+}
 
-    .box {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 0 8px;
-    }
+.box {
+    
+    margin: 0 40px;
+    padding: 0 8px
+}
 
-    .item-container {
-      position: relative;
-      padding-left: 22px;
-    }
+.item-container {
+    position: relative;
+    padding-left: 22px
+}
 
-    .item-cont {
-      padding: var(--theme-box-padding);
-      line-height: 1.5;
-      font-family: var(--theme-font);
-      color: var(--theme-color);
-      cursor: default;
-    }
+.item-cont {
+    padding: var(--theme-box-padding);
+    line-height: 1.5;
+    font-family: var(--theme-font);
+    color: var(--theme-color);
+    cursor: default
+}
 
-    .item-cont:hover,
-    .item-contSelected {
-      background: var(--theme-bg-over);
-    }
+.item-cont:hover,
+.item-contSelected {
+    background: var(--theme-bg-over)
+}
 
-    .item-title {
-      font-size: calc(var(--theme-font-size) + 2px);
-    }
+.item-title {
+    padding-bottom:6px;
+    font-size: calc(var(--theme-font-size) + 2px);
+}
 
-    .item-name {
-      font-weight: 700;
-    }
+.item-name {
+    font-weight: 700
+}
 
-    .item-detail {
-      font-size: var(--theme-font-size);
-      color: var(--theme-content-color);
-    }
+.item-detail {
+    color: var(--theme-content-color)
+}
 
-    .item-footer {
-      margin-top: 8px;
-      font-size: var(--theme-font-size);
-      color: var(--theme-footer-color);
-    }
+.item-detail,
+.item-footer {
+    font-size: var(--theme-font-size)
+}
 
-    .item-validate {
-      color: var(--theme-validate-color);
-      /* padding-left: 7px; */
-    }
+.item-footer {
+    margin-top: 8px;
+    color: var(--theme-footer-color)
+}
 
-    .setting-toolbar-container {
-      position: absolute;
-      left: 0;
-      top: 15px;
-      bottom: 0;
-      width: 22px;
-    }
+.item-validate {
+    color: var(--theme-validate-color)
+}
+
+.setting-toolbar-container {
+    position: absolute;
+    left: 0;
+    top: 15px;
+    bottom: 0;
+    width: 22px
+}
+
 </style>
