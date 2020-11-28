@@ -2,12 +2,12 @@
   <item-template :itemData="itemData" @onSettingClick="onSettingClick">
     <template v-slot:content>
       <DatePicker
-        type="date"
+        :type="dateType"
+        :format="dateFormat"
         placement="bottom-end"
         placeholder="请选择日期"
-        style="width: 300px"
         v-model="value"
-        format="yyyy-MM-dd"
+        :size="$editorUtil.itemStyle.itemInputSize"
       ></DatePicker>
     </template>
   </item-template>
@@ -22,6 +22,8 @@ export default {
     // 这里存放数据
     return {
       value: "",
+      dateFormat: "yyyy-MM-dd",
+      dateType: "date",
     };
   },
   props: {

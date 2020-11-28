@@ -4,7 +4,7 @@
         {{scope}}
     </template> -->
     <template v-slot:content>
-      <Select v-model="value" style="width: 300px">
+      <Select v-model="value" :size="$editorUtil.itemStyle.itemInputSize">
         <Option
           v-for="item in itemData.dropdownData"
           :value="item.value"

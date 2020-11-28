@@ -5,28 +5,40 @@
     :value="value"
   >
     <template v-slot:content>
-      <Input
-        v-model="value"
-        placeholder="请输入..."
-        style="width: 300px"
-        readonly
-      >
-        <Button slot="append" icon="md-open" @click="onPopup" />
-      </Input>
+      <!-- <Poptip
+        trigger="hover"
+        title="详细配置"
+        :content="value"
+        placement="bottom-start"
+      > -->
+        <Input
+          v-model="valueDisplay"
+          placeholder="未设置"
+          readonly
+          :size="$editorUtil.itemStyle.itemInputSize"
+        >
+          <Button
+            slot="append"
+            icon="md-open"
+            :size="$editorUtil.itemStyle.itemInputSize"
+            @click="onPopup"
+          />
+        </Input>
+      <!-- </Poptip> -->
     </template>
   </item-template>
 </template>
 
 <script>
-//import ItemTemplate from "../RuleSettingItemTemplate";
 export default {
   // import引入的组件需要注入到对象中才能使用
-  //components: { ItemTemplate },
+  //  components: { RuleSettingOuptSetting },
   data() {
     // 这里存放数据
     return {
       value: "",
-      popupType:"openExpression"
+      valueDisplay: "",
+      popupType: "openExpression",
     };
   },
   props: {
@@ -41,6 +53,7 @@ export default {
       return result;
     },
     onPopup() {
+      this.$modal.show("as-modal");
       console.log(this.popupType);
       if (window.vPlugin) {
         const _this = this;
@@ -65,6 +78,11 @@ export default {
   },
   mounted() {
     this.value = this.itemData.userData || this.itemData.default || "";
+  },
+  watch: {
+    value(newValue, oldValue) {
+      this.valueDisplay = newValue ? "已设置" : "";
+    },
   },
 };
 </script>

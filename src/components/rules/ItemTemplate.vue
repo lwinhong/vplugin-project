@@ -11,8 +11,8 @@
     >
       <div class="item-title">
         <span class="item-name">{{ itemData.name }}</span>
-        <span v-if="itemData.description"
-          >{{ `：${itemData.description}` }}</span
+        <span v-if="itemData.remark"
+          >{{ `：${itemData.remark}` }}</span
         >
         <slot name="header" :headerData="itemData" />
       </div>

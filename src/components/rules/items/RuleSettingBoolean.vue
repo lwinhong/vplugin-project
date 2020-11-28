@@ -4,7 +4,7 @@
         {{scope}}
     </template> -->
     <template v-slot:content>
-      <Checkbox v-model="value">{{ itemData.description }}</Checkbox>
+      <Checkbox v-model="value">{{ itemData.remark }}</Checkbox>
     </template>
   </item-template>
 </template>

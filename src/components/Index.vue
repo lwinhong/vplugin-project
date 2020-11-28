@@ -1,43 +1,79 @@
 <template>
   <div class="box">
-    <Row>
-      <Col span="24" v-for="(val, name, index) in ruleMetaData" :key="index">
-        <RuleSettingCheckbox
-          v-if="editorUtil.IsBooleanEditor(val)"
-          :itemData="val"
-          :ref="getItemKey(index)"
-        />
-        <RuleSettingSelect
-          v-else-if="editorUtil.IsSelectEditor(val)"
-          :itemData="val"
-          :ref="getItemKey(index)"
-        />
-        <RuleSettingDate
-          v-else-if="editorUtil.IsDateTimeEditor(val)"
-          :itemData="val"
-          :ref="getItemKey(index)"
-        />
-        <RuleSettingExpression
-          v-else-if="editorUtil.IsExpressionEditor(val)"
-          :itemData="val"
-          :ref="getItemKey(index)"
-        />
-        <RuleSettingNumber
-          v-else-if="editorUtil.IsNumberEditor(val)"
-          :itemData="val"
-          :ref="getItemKey(index)"
-        />
-        <RuleSettingCustom
-          v-else-if="editorUtil.IsCustomEditor(val)"
-          :itemData="val"
-          :ref="getItemKey(index)"
-        />
-        <RuleSettingEntity
-          :itemData="val"
-          v-else-if="editorUtil.IsEntityEditor(val)"
-          :ref="getItemKey(index)"
-        />
-        <RuleSettingInput v-else :itemData="val" :ref="getItemKey(index)" />
+    <Row :gutter="56">
+      <Col :span="colSpan">
+        <h5>参数设置</h5>
+        <Row>
+          <Col
+            span="24"
+            v-for="(val, name, index) in ruleMetaData.inputs"
+            :key="index"
+          >
+            <RuleSettingBoolean
+              v-if="editorUtil.IsBooleanEditor(val)"
+              :itemData="val"
+              :ref="getItemKey(index)"
+            />
+            <RuleSettingDropdown
+              v-else-if="editorUtil.IsDropdownEditor(val)"
+              :itemData="val"
+              :ref="getItemKey(index)"
+            />
+            <RuleSettingDate
+              v-else-if="editorUtil.IsDateEditor(val)"
+              :itemData="val"
+              :ref="getItemKey(index)"
+            />
+            <RuleSettingLongDate
+              v-else-if="editorUtil.IsLongDateEditor(val)"
+              :itemData="val"
+              :ref="getItemKey(index)"
+            />
+            <RuleSettingExpression
+              v-else-if="editorUtil.IsExpressionEditor(val)"
+              :itemData="val"
+              :ref="getItemKey(index)"
+            />
+            <RuleSettingNumber
+              v-else-if="editorUtil.IsNumberEditor(val)"
+              :itemData="val"
+              :ref="getItemKey(index)"
+            />
+            <RuleSettingInteger
+              v-else-if="editorUtil.IsIntegerEditor(val)"
+              :itemData="val"
+              :ref="getItemKey(index)"
+            />
+            <RuleSettingInputEntity
+              :itemData="val"
+              v-else-if="editorUtil.IsInputEntityEditor(val)"
+              :ref="getItemKey(index)"
+            />
+            <RuleSettingText
+              :itemData="val"
+              v-else-if="editorUtil.IsTextEditor(val)"
+              :ref="getItemKey(index)"
+            />
+            <RuleSettingCustom
+              v-else-if="editorUtil.IsCustomEditor(val)"
+              :itemData="val"
+              :ref="getItemKey(index)"
+            />
+            <RuleSettingChar v-else :itemData="val" :ref="getItemKey(index)" />
+          </Col>
+        </Row>
+      </Col>
+      <Col :span="colSpan" v-if="ruleMetaData.outputs">
+        <h5>返回值设置</h5>
+        <Row>
+          <Col
+            span="24"
+            v-for="(val, name, index) in ruleMetaData.outputs"
+            :key="index"
+          >
+            <RuleSettingOutCopy :itemData="val" :ref="getItemKey(index)" />
+          </Col>
+        </Row>
       </Col>
     </Row>
     <!-- <Spin size="large" fix v-if="!allDone"></Spin> -->
@@ -52,6 +88,9 @@ export default {
     ...mapState(["ruleMetaData", "allDone"]),
     editorUtil() {
       return this.$editorUtil;
+    },
+    colSpan() {
+      return this.ruleMetaData.outputs ? 12 : 24;
     },
   },
   methods: {

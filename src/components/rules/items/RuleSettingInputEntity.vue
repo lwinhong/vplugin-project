@@ -4,7 +4,7 @@ export default {
   extends: RuleSettingExpression,
   data() {
     return {
-      popupType: "openEntity",
+      popupType: "inputCopy",
     };
   },
 };

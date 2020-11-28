@@ -1,5 +1,9 @@
 <template>
-  <item-template :itemData="itemData" @onSettingClick="onSettingClick" :value="value">
+  <item-template
+    :itemData="itemData"
+    @onSettingClick="onSettingClick"
+    :value="value"
+  >
     <!-- <template v-slot:header ="scope">
         {{scope}}
     </template> -->
@@ -7,8 +11,8 @@
       <InputNumber
         v-model="value"
         placeholder="请输入..."
-        style="width: 300px"
         :precision="precision"
+        :size="$editorUtil.itemStyle.itemInputSize"
       ></InputNumber>
     </template>
   </item-template>
@@ -24,11 +28,11 @@ export default {
     // 这里存放数据
     return {
       value: 0,
-      precision: 0,
+      precision: 2,
     };
   },
   props: {
-    itemData: [Object, Array]
+    itemData: [Object, Array],
   },
   mounted() {
     this.value = Number(this.itemData.userData || this.itemData.default);

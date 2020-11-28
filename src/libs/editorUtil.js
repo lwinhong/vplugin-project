@@ -52,13 +52,25 @@ editorUtil.getObjectFirstObj = function (obj) {
 }
 
 /**
- * item是否使用文本类型编辑器
+ * item是否使用长文本类型编辑器
  * @param {item数据} obj 
  */
 editorUtil.IsTextEditor = function (obj) {
     //obj = _getEditorConfig(obj);
     if (obj) {
-        return obj.type == "string" && !obj.editor;
+        return obj.type == "text" && !obj.editor;
+    }
+    return false;
+}
+
+/**
+ * item是否使用文本类型编辑器
+ * @param {item数据} obj 
+ */
+editorUtil.IsCharEditor = function (obj) {
+    //obj = _getEditorConfig(obj);
+    if (obj) {
+        return obj.type == "char" && !obj.editor;
     }
     return false;
 }
@@ -79,10 +91,22 @@ editorUtil.IsBooleanEditor = function (obj) {
  * item是否使用日期类型编辑器
  * @param {item数据} obj 
  */
-editorUtil.IsDateTimeEditor = function (obj) {
+editorUtil.IsDateEditor = function (obj) {
     //const obj = _getEditorConfig(editorConfigData);
     if (obj) {
-        return obj.type == "dateTime" && !obj.editor;
+        return obj.type == "date" && !obj.editor;
+    }
+    return false;
+}
+
+/**
+ * item是否使用日期类型编辑器
+ * @param {item数据} obj 
+ */
+editorUtil.IsLongDateEditor = function (obj) {
+    //const obj = _getEditorConfig(editorConfigData);
+    if (obj) {
+        return obj.type == "longDate" && !obj.editor;
     }
     return false;
 }
@@ -91,7 +115,7 @@ editorUtil.IsDateTimeEditor = function (obj) {
  * 是否为下拉选择
  * @param {} obj 
  */
-editorUtil.IsSelectEditor = function (obj) {
+editorUtil.IsDropdownEditor = function (obj) {
     //const obj = _getEditorConfig(obj);
     if (obj) {
         //return obj.type == "string" && obj.dropdownData;
@@ -105,6 +129,18 @@ editorUtil.IsSelectEditor = function (obj) {
  * @param {item数据} obj 
  */
 editorUtil.IsNumberEditor = function (obj) {
+    //obj = _getEditorConfig(obj);
+    if (obj) {
+        return obj.type == "number" && !obj.editor;
+    }
+    return false;
+}
+
+/**
+ * item是否使用数字类型编辑器
+ * @param {item数据} obj 
+ */
+editorUtil.IsIntegerEditor = function (obj) {
     //obj = _getEditorConfig(obj);
     if (obj) {
         return obj.type == "integer" && !obj.editor;
@@ -124,14 +160,38 @@ editorUtil.IsExpressionEditor = function (obj) {
     return false;
 }
 
+// /**
+//  * 是否为表达式编辑器
+//  * @param {*} obj 
+//  */
+// editorUtil.IsEntityEditor = function (obj) {
+//     //const obj = _getEditorConfig(obj);
+//     if (obj) {
+//         return obj.editor == "entity";
+//     }
+//     return false;
+// }
+
 /**
- * 是否为表达式编辑器
- * @param {*} obj 
- */
-editorUtil.IsEntityEditor = function (obj) {
+* 是否为表达式编辑器
+* @param {*} obj 
+*/
+editorUtil.IsInputEntityEditor = function (obj) {
     //const obj = _getEditorConfig(obj);
     if (obj) {
-        return obj.editor == "entity";
+        return obj.type == "entity" && obj.editor == "inputCopy";
+    }
+    return false;
+}
+
+/**
+* 是否为表达式编辑器
+* @param {*} obj 
+*/
+editorUtil.IsOutEntityEditor = function (obj) {
+    //const obj = _getEditorConfig(obj);
+    if (obj) {
+        return obj.editor == "outCopy";
     }
     return false;
 }
@@ -155,18 +215,22 @@ editorUtil.IsCustomEditor = function (obj) {
  */
 editorUtil.mergeData = function (editorMeta, userData) {
     if (editorMeta) {
-        let index = 0;
-        for (const key in editorMeta) {
-            if (editorMeta.hasOwnProperty(key)) {
-                const meta = editorMeta[key];
-                if (userData && userData.hasOwnProperty(key)) {
-                    meta.userData = userData[key]
+        const merage = (data) => {
+            let index = 0;
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    const meta = data[key];
+                    if (userData && userData.hasOwnProperty(key)) {
+                        meta.userData = userData[key]
+                    }
+                    meta.index = index;
+                    meta.editorKey = key;
+                    index++;
                 }
-                meta.index = index;
-                meta.editorKey = key;
-                index++;
             }
         }
+        merage(editorMeta.inputs);
+        merage(editorMeta.outputs);
     }
 }
 
@@ -189,5 +253,11 @@ editorUtil.validate = (valueValidation, targetValue) => {
     }
     return null;
 }
+
+editorUtil.itemStyle = {
+    itemInputSize: "small"
+}
+
+editorUtil.deepCopy = util.deepClone;
 
 export default editorUtil;

@@ -4,10 +4,17 @@ import 'view-design/dist/styles/iview.css';
 import store from './store';
 import editorUtil from "./libs/editorUtil";
 import viewLoader from "./components/viewLoader";
+// import VModal from 'vue-js-modal';
 
+// Vue.use(VModal, {
+//   dialog: true,
+//   dynamicDefaults: {
+//     draggable: true
+//   }
+// });
 Vue.use(ViewUI);
 Vue.config.productionTip = false
-Vue.config.errorHandler = (err, vm, info) => console.error(arguments);
+// Vue.config.errorHandler = (err, vm, info) => console.error(arguments);
 
 Vue.prototype.$editorUtil = editorUtil;
 
@@ -19,7 +26,7 @@ Vue.use(viewLoader);
 import { createNamespacedHelpers } from "vuex";
 const { mapActions, mapState } = createNamespacedHelpers("ruleEditorStore");
 
-//import test from "./test/test";
+import test from "./test/test";
 import App from './App';
 const app = new Vue({
   el: '#app',
@@ -46,7 +53,7 @@ const app = new Vue({
       if (window.vPlugin) {
         window.vPlugin.execute("appMounted");
       } else {
-        //_onLoad(test.metaData, test.userData);
+        _onLoad(test.newMetaData, test.userData);
       }
     }, 100);
   }
@@ -78,8 +85,8 @@ const _onLoad = (metaData, userData, context) => {
   app.setEditorTypeAction(editorType)
   let init = () => {
     let editorMeta = null;
-    if (metaData && metaData.configuration)
-      editorMeta = metaData.configuration.properties;
+    if (metaData && metaData.vpluginRule)
+      editorMeta = metaData.vpluginRule;
     if (!editorMeta)
       editorMeta = {};
     try {

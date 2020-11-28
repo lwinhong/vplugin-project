@@ -8,31 +8,33 @@
       <Input
         v-model="value"
         placeholder="请输入..."
-        style="width: 300px"
+        :type="inputType"
         clearable
+        :size="$editorUtil.itemStyle.itemInputSize"
       />
     </template>
+  
   </item-template>
 </template>
 
 <script>
-//import ItemTemplate from "../RuleSettingItemTemplate";
-
 export default {
   // import引入的组件需要注入到对象中才能使用
-  //components: { ItemTemplate },
+  name:"RuleSettingChar",
   data() {
     // 这里存放数据
     return {
       value: "",
       //validateMsg: null,
       devHtml: "",
+      inputType: "text",
     };
   },
   props: {
     itemData: [Object, Array],
   },
   mounted() {
+    //debugger
     this.value = this.itemData.userData || this.itemData.default || "";
     //this.devHtml="<button>132</button>"
   },
