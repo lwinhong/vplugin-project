@@ -31,6 +31,7 @@
     <RuleSettingOutParamsEditor
       :data="settingData"
       :showModal="mappingModalVisible"
+      :context="itemData"
       @ok="mappingOk"
       @cancel="onCancel"
     />
