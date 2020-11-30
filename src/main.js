@@ -53,7 +53,7 @@ const app = new Vue({
       if (window.vPlugin) {
         window.vPlugin.execute("appMounted");
       } else {
-        _onLoad(test.newMetaData, test.userData);
+        _onLoad(test.contribution, test.newMetaData, test.userData);
       }
     }, 100);
   }
@@ -66,12 +66,13 @@ const app = new Vue({
  * @param {插件上下文} context 
  */
 const onLoad = function (data) {
-  let metaData = JSON.parse(data.metaData);
-  let userData = JSON.parse(data.userData);
+  let contribution = data.contribution ? JSON.parse(data.contribution) : {};
+  let metaData = data.metaData ? JSON.parse(data.metaData) : {};
+  let userData = data.userData ? JSON.parse(data.userData) : {};
   //let context = JSON.parse(data.context);
 
   console.log(metaData)
-  _onLoad(metaData, userData);
+  _onLoad(contribution, metaData, userData);
 }
 
 /**
@@ -80,17 +81,16 @@ const onLoad = function (data) {
  * @param {用户数据（保存数据）} userData 
  * @param {插件上下文} context 
  */
-const _onLoad = (metaData, userData, context) => {
-
+const _onLoad = (contribution, metaData, userData, context) => {
   app.setEditorTypeAction(editorType)
   let init = () => {
     let editorMeta = null;
-    if (metaData && metaData.vpluginRule)
-      editorMeta = metaData.vpluginRule;
+    if (contribution && contribution.vpluginRule)
+      editorMeta = contribution.vpluginRule;
     if (!editorMeta)
       editorMeta = {};
     try {
-      editorUtil.mergeData(editorMeta, userData)
+      editorUtil.mergeData(editorMeta, contribution, metaData, userData)
       app.setRuleMetaDataAction(editorMeta);
 
       console.log("allDone")

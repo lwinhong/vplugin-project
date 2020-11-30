@@ -28,7 +28,7 @@ export default {
     };
   },
   mounted() {
-    this.value = this.itemData.userData || this.itemData.default || "";
+    this.value = this.itemData.userData.paramSourceValue || this.itemData.default || "";
   },
   props: {
     itemData: [Object, Array],
@@ -36,9 +36,7 @@ export default {
   // 方法集合
   methods: {
     save() {
-      let result = {};
-      result[this.itemData.editorKey] = this.value;
-      //result.dataCheck = true;
+      let result = this.$editorUtil.saveSimpleCommon(this.itemData, this.value);
       return result;
     },
     onSettingClick(cmd) {

@@ -1,44 +1,117 @@
 <template>
-  <div class='container'></div>
+  <Modal
+    v-model="visible"
+    mask
+    :mask-closable="false"
+    title="方法实体字段映射"
+    :width="800"
+    @on-ok="ok"
+    @on-cancel="cancel"
+  >
+    <Table
+      :data="settingDataTable"
+      :columns="columns"
+      :size="$editorUtil.itemStyle.itemInputSize"
+    >
+      <template slot-scope="{ row, index }" slot="destSlot">
+        <Select style="width: 100%" transfer>
+          <Option :value="1">{{ 1 }}</Option>
+          <Option :value="2">{{ 2 }}</Option>
+        </Select>
+      </template>
+      <template slot-scope="{ row, index }" slot="srcTypeSlot">
+        <Select style="width: 100%" transfer>
+          <Option :value="1">{{ 1 }}</Option>
+          <Option :value="2">{{ 2 }}</Option>
+        </Select>
+      </template>
+      <template slot-scope="{ row, index }" slot="srcSettingSlot">
+        <Select style="width: 100%" transfer>
+          <Option :value="1">{{ 1 }}</Option>
+          <Option :value="2">{{ 2 }}</Option>
+        </Select>
+      </template>
+    </Table>
+  </Modal>
 </template>
 
 <script>
-
-  export default {
-    // import引入的组件需要注入到对象中才能使用
-    components: {},
-    data () {
-      // 这里存放数据
-      return {}
-    },
-    // 生命周期 - 创建完成（可以访问当前this实例）
-    created () {},
-    // 生命周期 - 挂载完成（可以访问DOM元素）
-    mounted () {},
+export default {
+  props: {
+    data: Array,
+    showModal: Boolean,
+  },
+  model: {
+    prop: "showModal",
+    event: "change",
+  },
+  data() {
     // 这里存放数据
-    beforeCreate () {},
-    // 生命周期 - 挂载之前 
-    beforeMount () {},
-    // 生命周期 - 更新之前 
-    beforeUpdate() {},
-    // 生命周期 - 更新之后 
-    updated () {},
-    // 生命周期 - 销毁之前 
-    beforeDestroy() {},
-    // 生命周期 - 销毁完成 
-    destroyed () {},
-    // 如果页面有keep-alive缓存功能，这个函数会触发
-    activated () {},
-    // 方法集合
-    methods: {},
-    // 监听属性 类似于data概念
-    computed: {},
-    // 监控data中的数据变化
-    watch: {},
-  }
+    return {
+      visible: false,
+      columns: [
+        {
+          title: "目标",
+          key: "dest",
+          align: "center",
+          slot: "destSlot",
+        },
+        {
+          title: "来源类型",
+          key: "srcType",
+          align: "center",
+          width: 120,
+          slot: "srcTypeSlot",
+        },
+        {
+          title: "来源",
+          key: "srcSetting",
+          align: "center",
+          slot: "srcSettingSlot",
+        },
+      ],
+    };
+  },
+  computed: {
+    settingDataTable() {
+      return this.data;
+    },
+  },
+  // 生命周期 - 创建完成（可以访问当前this实例）
+  created() {},
+  // 生命周期 - 挂载完成（可以访问DOM元素）
+  mounted() {},
+  // 方法集合
+  methods: {
+    show(context) {
+      this.dataContext = context;
+      this.visible = true;
+    },
+    ok() {
+      let mapping = [];
+      this.settingDataTable.forEach((mapping) => {
+        let item = {
+          destField: mapping.destField,
+          destType: mapping.destType,
+          srcValueType: mapping.srcValueType, //来源的类型 expression ，field
+          srcValue: mapping.srcValue,
+        };
+        mapping.push(item);
+      });
+
+      this.$emit("change", false);
+      this.$emit("on-ok", this.dataContext, mapping);
+    },
+    cancel() {
+      this.$emit("change", false);
+      this.$emit("cancel");
+    },
+  },
+  // 监控data中的数据变化
+  watch: {
+    showModal(newValue, oldValue) {
+      this.visible = newValue;
+    },
+  },
+};
 </script>
-
-<style scoped>
-  /* @import url(); 引入公共css类 */
-
-</style>

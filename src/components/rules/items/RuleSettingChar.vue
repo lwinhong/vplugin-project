@@ -13,14 +13,13 @@
         :size="$editorUtil.itemStyle.itemInputSize"
       />
     </template>
-  
   </item-template>
 </template>
 
 <script>
 export default {
   // import引入的组件需要注入到对象中才能使用
-  name:"RuleSettingChar",
+  name: "RuleSettingChar",
   data() {
     // 这里存放数据
     return {
@@ -34,15 +33,12 @@ export default {
     itemData: [Object, Array],
   },
   mounted() {
-    //debugger
-    this.value = this.itemData.userData || this.itemData.default || "";
+    this.value = this.itemData.userData.paramSourceValue || this.itemData.default || "";
     //this.devHtml="<button>132</button>"
   },
   methods: {
     save() {
-      let result = {};
-      result[this.itemData.editorKey] = this.value;
-      //result.dataCheck = true;
+      let result = this.$editorUtil.saveSimpleCommon(this.itemData, this.value);
       return result;
     },
     onSettingClick(cmd) {

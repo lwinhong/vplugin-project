@@ -15,7 +15,7 @@
           <Button
             slot="append"
             icon="md-open"
-            @click="onPopup"
+            @click="openEntityFieldMappingEditor"
             :size="$editorUtil.itemStyle.itemInputSize"
           />
           <!-- <Poptip
@@ -28,20 +28,19 @@
         </Input>
       </template>
     </item-template>
-    <RuleSettingOutParamsEditor
+    <RuleSettingEntityFieldMapping
+      :showModal="mappingModalVisible"
       :data="settingData"
-      v-model="mappingModalVisible"
-      :context="itemData"
-      @ok="mappingOk"
-      @cancel="onCancel"
+      ref="entityFieldMapping"
+      @on-ok="onEntityFieldMappingOk"
     />
   </div>
 </template>
 <script>
-import RuleSettingOutParamsEditor from "../ruleCommonEditor/RuleSettingOutParamsEditor";
+import RuleSettingEntityFieldMapping from "../ruleCommonEditor/RuleSettingEntityFieldMapping";
 export default {
-  name: "RuleSettingOutCopy",
-  components: { RuleSettingOutParamsEditor },
+  name: "RuleSettingInputCopy",
+  components: { RuleSettingEntityFieldMapping },
   props: {
     itemData: [Object, Array],
   },
@@ -50,7 +49,7 @@ export default {
       mappingModalVisible: false,
       value: "",
       valueDisplay: "",
-      popupType: "outCopy",
+      popupType: "inputCopy",
       /*保存的数据*/
       settingData: [],
     };
@@ -58,19 +57,15 @@ export default {
   methods: {
     save() {
       let result = {};
-      result.srcCode = this.itemData.editorKey; //来源，也是元数据key，固定
+      result.paramCode = this.itemData.editorKey; //来源，也是元数据key，固定
       if (this.settingData && this.settingData.length > 0) {
         let settingData = this.settingData[0];
 
-        result.srcType = settingData.srcType;
-        result.dest = settingData.dest;
-        result.destType = settingData.destType;
-        result.destFieldMapping = settingData.destFieldMapping;
+        result.paramSourceValue = settingData.paramSourceValue;
+        result.paramSourceType = settingData.paramSourceType;
+        result.paramFieldMapping = settingData.paramFieldMapping;
       }
       return result;
-    },
-    onPopup() {
-      this.mappingModalVisible = true;
     },
     onSettingClick(cmd) {
       switch (cmd) {
@@ -86,12 +81,17 @@ export default {
       }
       return key;
     },
-    mappingOk(settingDataTable) {
+    onEntityFieldMappingOk(settingDataTable) {
       this.settingData = this.$editorUtil.deepCopy(settingDataTable);
       //this.mappingModalVisible = false;
     },
-    onCancel() {
-      //this.mappingModalVisible = false;
+
+    openEntityFieldMappingEditor(row, index) {
+      //let _this = this;
+      this.$refs.entityFieldMapping.show({
+        row,
+        index,
+      });
     },
     getEmptyOutConfig() {
       return {
@@ -106,7 +106,7 @@ export default {
   },
 
   mounted() {
-    this.value = this.itemData.userData || this.itemData.default || "";
+    this.value = this.itemData.userData.paramSourceValue || this.itemData.default || "";
     this.settingData = [this.getEmptyOutConfig()];
   },
   watch: {

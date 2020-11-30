@@ -11,9 +11,7 @@
     >
       <div class="item-title">
         <span class="item-name">{{ itemData.name }}</span>
-        <span v-if="itemData.remark"
-          >{{ `：${itemData.remark}` }}</span
-        >
+        <span v-if="itemData.remark">{{ `：${itemData.remark}` }}</span>
         <slot name="header" :headerData="itemData" />
       </div>
       <div class="item-detail">
@@ -77,6 +75,10 @@ export default {
   },
   watch: {
     value(newValue, oldValue) {
+      if(this.itemData.required && !newValue){
+        this.validateMsg ="此项必填"
+        return;
+      }
       if (this.itemData.valueValidation) {
         this.validateMsg = this.$editorUtil.validate(
           this.itemData.valueValidation,

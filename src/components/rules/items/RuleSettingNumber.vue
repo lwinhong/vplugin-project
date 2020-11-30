@@ -35,14 +35,12 @@ export default {
     itemData: [Object, Array],
   },
   mounted() {
-    this.value = Number(this.itemData.userData || this.itemData.default);
+    this.value = Number(this.itemData.userData.paramSourceValue || this.itemData.default);
     //this.precision = 0;
   },
   methods: {
     save() {
-      let result = {};
-      result[this.itemData.editorKey] = this.value;
-      //result.dataCheck = true;
+      let result = this.$editorUtil.saveSimpleCommon(this.itemData, this.value);
       return result;
     },
     onSettingClick(cmd) {

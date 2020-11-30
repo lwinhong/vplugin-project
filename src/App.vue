@@ -3,6 +3,7 @@
     <Index :ref="refIndex" />
     <!-- <router-view /> -->
     <!-- <div>123456798</div> -->
+    <!-- <Button @click="save">Save</Button> -->
   </div>
 </template>
 
@@ -24,18 +25,20 @@ export default {
   },
   methods: {
     validate(showMsg) {
-      let value = this.thisInstance.validate();
-      if (value && value.length > 0 && showMsg) {
-        this.$Message.error({
-          content: "数据校验不通过，请查看页面中红色字样提示信息",
-          duration: 4,
-          closable: true,
-        });
-      }
-      return value;
+      // let value = this.thisInstance.validate();
+      // if (value && value.length > 0 && showMsg) {
+      //   this.$Message.error({
+      //     content: "数据校验不通过，请查看页面中红色字样提示信息",
+      //     duration: 4,
+      //     closable: true,
+      //   });
+      // }
+      // return value;
+      return "";//校验还没做好。先不做校验
     },
     save() {
       let value = this.thisInstance.save();
+      console.log(JSON.stringify(value))
       return value;
     },
     //@keyup.ctrl.83="saveTest"

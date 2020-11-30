@@ -14,6 +14,7 @@
       width="100%"
       height="200"
       border
+      :size="$editorUtil.itemStyle.itemInputSize"
     >
       <template slot-scope="{ row, index }" slot="destTypeSlot">
         <Dropdown trigger="click" transfer>
@@ -31,12 +32,12 @@
               {{ value.name }}
             </DropdownItem>
           </DropdownMenu>
-        </Dropdown> </template
-      ><template slot-scope="{ row, index }" slot="destSlot">
-        <Dropdown trigger="click" transfer>
+        </Dropdown>
+      </template>
+      <template slot-scope="{ row, index }" slot="destSlot">
+        <Dropdown trigger="click" transfer v-if="row.destType != 'control'">
           <a>
-            <!-- <span>{{ getItemName(destItems, row.destType) }} </span> -->
-            <span v-text="row.dest"></span>
+            <span>{{ row.dest ? row.dest : "请选择" }} </span>
             <Icon type="md-arrow-dropdown" size="18" />
           </a>
           <DropdownMenu slot="list">
@@ -50,6 +51,15 @@
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
+        <template v-else>
+          <span>{{ row.dest ? row.dest : "未配置" }}</span>
+          <Button
+            icon="md-open"
+            type="text"
+            :size="$editorUtil.itemStyle.itemInputSize"
+            @click="openControlSelector(row, row.dest)"
+          ></Button>
+        </template>
       </template>
       <template slot-scope="{ row, index }" slot="srcTypeSlot">
         <Dropdown trigger="click">
@@ -69,7 +79,7 @@
           </DropdownMenu>
         </Dropdown>
       </template>
-      <template slot-scope="{ row }" slot="srcSettingSlot">
+      <template slot-scope="{ row, index }" slot="srcSettingSlot">
         <span>{{
           row.srcType == "returnValue"
             ? row.destFieldMapping
@@ -82,19 +92,25 @@
           icon="md-open"
           type="text"
           :size="$editorUtil.itemStyle.itemInputSize"
-          @click="openSrcEditor(row.srcType)"
+          @click="openEntityFieldMappingEditor(row, index)"
         ></Button>
       </template>
     </Table>
+    <RuleSettingEntityFieldMapping
+      ref="entityFieldMapping"
+      @on-ok="onEntityFieldMappingOk"
+    />
   </Modal>
 </template>
 
 <script>
 const srcTypeExpression = { name: "表达式", value: "expression" };
 const srcTypeReturnValue = { name: "返回值", value: "returnValue" };
+import RuleSettingEntityFieldMapping from "./RuleSettingEntityFieldMapping";
 
 export default {
   name: "RuleSettingOutParamsEditor",
+  components: { RuleSettingEntityFieldMapping },
   props: {
     data: Array,
     showModal: Boolean,
@@ -102,6 +118,7 @@ export default {
   },
   model: {
     prop: "showModal",
+    event: "change",
   },
   computed: {
     settingDataTable() {
@@ -149,75 +166,6 @@ export default {
           align: "center",
           width: 120,
           slot: "destTypeSlot",
-          //   render: (h, params) => {
-          //     let _this = this;
-          //     return h(
-          //       "Dropdown",
-          //       {
-          //         props: {
-          //           trigger: "click",
-          //           transfer: true,
-          //         },
-          //         on: {
-          //           "on-click": (value) => {
-          //             let row = params.row;
-
-          //             row.destType = value;
-          //             row.dest = "";
-          //             let isEntity = value == "entity";
-          //             if (isEntity) {
-          //               row.srcType = "returnValue";
-          //             }
-
-          //             _this.settingDataTable[params.index] = row;
-          //             if (isEntity) {
-          //               _this.srcTypeItems = [srcTypeReturnValue];
-          //             } else {
-          //               _this.srcTypeItems = [
-          //                 srcTypeReturnValue,
-          //                 srcTypeExpression,
-          //               ];
-          //             }
-          //           },
-          //         }, //iview组件内部的属性定义在其标签的对象里
-          //       },
-          //       [
-          //         h("a", [
-          //           //创建一个a标签,a标签里面又有元素,继续放入后面数组
-          //           h(
-          //             "span",
-          //             this.getItemName(this.destTypeItems, params.row.destType)
-          //           ), //span中的内容
-          //           h("Icon", {
-          //             props: {
-          //               type: "md-arrow-dropdown",
-          //               size: "18",
-          //             },
-          //           }),
-          //         ]),
-          //         h(
-          //           "DropdownMenu",
-          //           {
-          //             //创建一个和a标签同级的标签
-          //             slot: "list", //iview组件内部的属性定义在其标签的对象里
-          //           },
-          //           this.destTypeItems.map(function (type) {
-          //             //把map看作循环,type看作循环的每一项
-          //             return h(
-          //               "DropdownItem",
-          //               {
-          //                 props: {
-          //                   name: type.value,
-          //                   selected: type.value == params.row.destType,
-          //                 },
-          //               },
-          //               type.name
-          //             );
-          //           })
-          //         ),
-          //       ]
-          //     );
-          //   },
         },
         {
           title: "目标",
@@ -231,89 +179,12 @@ export default {
           align: "center",
           width: 120,
           slot: "srcTypeSlot",
-          //   render: (h, params) => {
-          //     let _this = this;
-          //     return h(
-          //       "Dropdown",
-          //       {
-          //         props: {
-          //           trigger: "click",
-          //         },
-          //         on: {
-          //           "on-click": (value) => {
-          //             params.row.srcType = value;
-          //             if (value == "expression") {
-          //               params.row.srcSetting = this.context
-          //                 ? this.context.editorKey
-          //                 : "";
-          //             }
-          //             _this.settingDataTable[params.index] = params.row;
-          //           },
-          //         }, //iview组件内部的属性定义在其标签的对象里
-          //       },
-          //       [
-          //         h("a", [
-          //           //创建一个a标签,a标签里面又有元素,继续放入后面数组
-          //           h(
-          //             "span",
-          //             this.getItemName(this.srcTypeItems, params.row.srcType)
-          //           ), //span中的内容
-          //           h("Icon", {
-          //             props: {
-          //               type: "md-arrow-dropdown",
-          //               size: "18",
-          //             },
-          //           }),
-          //         ]),
-          //         h(
-          //           "DropdownMenu",
-          //           {
-          //             //创建一个和a标签同级的标签
-          //             slot: "list", //iview组件内部的属性定义在其标签的对象里
-          //           },
-          //           this.srcTypeItems.map(function (type) {
-          //             //把map看作循环,type看作循环的每一项
-          //             return h(
-          //               "DropdownItem",
-          //               {
-          //                 props: {
-          //                   name: type.value,
-          //                   selected: type.value == params.row.srcType,
-          //                 },
-          //               },
-          //               type.name
-          //             );
-          //           })
-          //         ),
-          //       ]
-          //     );
-          //   },
         },
         {
           title: "来源",
           key: "srcSetting",
           align: "center",
           slot: "srcSettingSlot",
-          //   render: (h, params) => {
-          //     return h("div", [
-          //       h("span", "未配置"),
-          //       h("Button", {
-          //         props: {
-          //           icon: "md-open",
-          //           type: "text",
-          //           size: this.$editorUtil.itemStyle.itemInputSize,
-          //         },
-          //         style: {
-          //           marginLeft: "30px",
-          //         },
-          //         on: {
-          //           click: () => {
-          //             alert(params.row.srcCode);
-          //           },
-          //         },
-          //       }),
-          //     ]);
-          //   },
         },
       ],
     };
@@ -321,9 +192,11 @@ export default {
   // 方法集合
   methods: {
     ok() {
+      this.$emit("change", false);
       this.$emit("ok", this.settingDataTable);
     },
     cancel() {
+      this.$emit("change", false);
       this.$emit("cancel");
     },
     getItemName(items, key) {
@@ -333,8 +206,16 @@ export default {
       }
       return key;
     },
-    openSrcEditor(srcType) {
-      alert(srcType);
+    openEntityFieldMappingEditor(row, index) {
+      //let _this = this;
+      this.$refs.entityFieldMapping.show({
+        row,
+        index,
+      });
+    },
+    onEntityFieldMappingOk(context, mapping) {
+      context.row.destFieldMapping = mapping;
+      _this.updateTableRow(context.row, context.index);
     },
     onDestChanged(value, row, index) {
       row.dest = value;
@@ -363,6 +244,7 @@ export default {
       }
       this.updateTableRow(row, index);
     },
+    openControlSelector(row, selectedControl) {},
     updateTableRow(row, index) {
       this.settingDataTable[index] = row;
     },

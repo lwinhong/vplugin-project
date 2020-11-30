@@ -44,7 +44,7 @@
               :itemData="val"
               :ref="getItemKey(index)"
             />
-            <RuleSettingInputEntity
+            <RuleSettingInputCopy
               :itemData="val"
               v-else-if="editorUtil.IsInputEntityEditor(val)"
               :ref="getItemKey(index)"
@@ -71,7 +71,10 @@
             v-for="(val, name, index) in ruleMetaData.outputs"
             :key="index"
           >
-            <RuleSettingOutCopy :itemData="val" :ref="getItemKey(index)" />
+            <RuleSettingOutCopy
+              :itemData="val"
+              :ref="getItemKey(index, outputTypeCode)"
+            />
           </Col>
         </Row>
       </Col>
@@ -82,7 +85,8 @@
 <script>
 import { createNamespacedHelpers } from "vuex";
 const { mapState } = createNamespacedHelpers("ruleEditorStore");
-
+const inputTypeCode = "ruleInputParams";
+const outputTypeCode = "ruleOutputParams";
 export default {
   computed: {
     ...mapState(["ruleMetaData", "allDone"]),
@@ -91,6 +95,9 @@ export default {
     },
     colSpan() {
       return this.ruleMetaData.outputs ? 12 : 24;
+    },
+    outputTypeCode() {
+      return outputTypeCode;
     },
   },
   methods: {
@@ -134,24 +141,44 @@ export default {
     },
     save() {
       let result = {};
-      let index = 0;
+      let _this = this;
 
-      //收集各个item的值,生成指定的数据格式
-      for (const key in this.ruleMetaData) {
-        if (this.ruleMetaData.hasOwnProperty(key)) {
-          const element = this.ruleMetaData[key];
-          const refName = this.getItemKey(index);
-          const itemValue = this.$refs[refName][0].save();
-          if (itemValue) {
-            Object.assign(result, itemValue);
+      let saveHandler = (metaData, saveArray, ruleType) => {
+        if (!metaData) return;
+        let index = 0;
+        //收集各个item的值,生成指定的数据格式
+        for (const key in metaData) {
+          if (metaData.hasOwnProperty(key)) {
+            const element = metaData[key];
+            const refName = _this.getItemKey(index, ruleType);
+            const itemValue = _this.$refs[refName][0].save();
+            if (itemValue) {
+              saveArray.push(itemValue);
+            }
             index++;
           }
         }
+      };
+
+      if (this.ruleMetaData.inputs) {
+        let inputs = [];
+        saveHandler(this.ruleMetaData.inputs, inputs, inputTypeCode);
+        result[inputTypeCode] = inputs;
       }
+
+      if (this.ruleMetaData.outputs) {
+        let outputs = [];
+        saveHandler(this.ruleMetaData.outputs, outputs, outputTypeCode);
+        result[outputTypeCode] = outputs;
+      }
+
       return result;
     },
-    getItemKey(index) {
-      return "item" + index;
+    /**
+     * 获取生成item的key index 下标，ruleType：input、output
+     */
+    getItemKey(index, ruleType) {
+      return "item_" + (ruleType || inputTypeCode) + index;
     },
     getItemObj(item, name, index) {
       item.index = index;

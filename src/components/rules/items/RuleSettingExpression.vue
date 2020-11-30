@@ -47,13 +47,11 @@ export default {
   // 方法集合
   methods: {
     save() {
-      let result = {};
-      result[this.itemData.editorKey] = this.value;
-      //result.dataCheck = true;
+      let result = this.$editorUtil.saveSimpleCommon(this.itemData, this.value);
       return result;
     },
     onPopup() {
-      this.$modal.show("as-modal");
+  
       console.log(this.popupType);
       if (window.vPlugin) {
         const _this = this;
@@ -77,7 +75,7 @@ export default {
     },
   },
   mounted() {
-    this.value = this.itemData.userData || this.itemData.default || "";
+    this.value = this.itemData.userData.paramSourceValue || this.itemData.default || "";
   },
   watch: {
     value(newValue, oldValue) {

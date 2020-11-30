@@ -155,7 +155,7 @@ editorUtil.IsIntegerEditor = function (obj) {
 editorUtil.IsExpressionEditor = function (obj) {
     //const obj = _getEditorConfig(obj);
     if (obj) {
-        return obj.editor == "expression";
+        return obj.editor == "inputCopy" && obj.type != "entity";
     }
     return false;
 }
@@ -179,7 +179,7 @@ editorUtil.IsExpressionEditor = function (obj) {
 editorUtil.IsInputEntityEditor = function (obj) {
     //const obj = _getEditorConfig(obj);
     if (obj) {
-        return obj.type == "entity" && obj.editor == "inputCopy";
+        return obj.editor == "inputCopy" && obj.type == "entity";
     }
     return false;
 }
@@ -213,25 +213,38 @@ editorUtil.IsCustomEditor = function (obj) {
  * @param {元数据} editorMeta 
  * @param {用户配置数据} userData 
  */
-editorUtil.mergeData = function (editorMeta, userData) {
-    if (editorMeta) {
-        const merage = (data) => {
-            let index = 0;
-            for (const key in data) {
-                if (data.hasOwnProperty(key)) {
-                    const meta = data[key];
-                    if (userData && userData.hasOwnProperty(key)) {
-                        meta.userData = userData[key]
-                    }
-                    meta.index = index;
-                    meta.editorKey = key;
-                    index++;
+editorUtil.mergeData = function (contribution, editorMeta, metaData, userData) {
+    if (!contribution)
+        return;
+
+    let index = 0;
+    let buildUserData = (data) => {
+        let tmp = {}
+        if (data) {
+            data.forEach(d => {
+                tmp[d.paramCode] = d;
+            });
+        }
+        return tmp;
+    };
+
+    const merage = (data, user) => {
+        let newUserData = buildUserData(user);
+        for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+                const meta = data[key];
+                if (newUserData && newUserData.hasOwnProperty(key)) {
+                    meta.userData = newUserData[key]
                 }
+                meta.index = index;
+                meta.editorKey = key;
+                index++;
             }
         }
-        merage(editorMeta.inputs);
-        merage(editorMeta.outputs);
     }
+    merage(contribution.inputs, userData ? userData.ruleInputParams : null);
+    merage(contribution.outputs, userData ? userData.ruleOutputParams : null);
+
 }
 
 /**
@@ -253,6 +266,16 @@ editorUtil.validate = (valueValidation, targetValue) => {
     }
     return null;
 }
+
+editorUtil.saveSimpleCommon = (itemData, value) => {
+    let result = {
+        paramCode: itemData.editorKey,
+        paramSourceType: "expression",
+        paramSourceValue: value,
+    };
+    return result;
+}
+
 
 editorUtil.itemStyle = {
     itemInputSize: "small"
