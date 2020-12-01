@@ -1,10 +1,12 @@
 const state = {
     userDataChanged: false,
     ruleMetaData: {},//元数据
+    ruleEditorData: {},
     ruleUserLastData: {},//用户上一次配置的数据
     currentItemIndex: -1,
     editorType: "", // rule/control/fuction
-    allDone: false //是否加载完成
+    allDone: false, //是否加载完成
+    allDestDetails: null
 }
 
 const getters = {
@@ -16,7 +18,20 @@ const getters = {
     },
     getRuleUserLastData(state, rootState) {
         return state.ruleUserLastData
-    }
+    },
+    getDestDetails(state, rootState) {
+        let items = state.allDestDetails;
+        let returnValue = [];
+        if (items) {
+            for (const key in items) {
+                if (items.hasOwnProperty(key)) {
+                    const item = items[key];
+                    returnValue.push({ name: item.text, value: key, details: item.value });
+                }
+            }
+        }
+        return returnValue;
+    },
 }
 
 const mutations = {
@@ -26,6 +41,9 @@ const mutations = {
     setRuleMetaData(state, value) {
         state.ruleMetaData = value;
     },
+    setRuleEditorData(state, value) {
+        state.ruleEditorData = value;
+    },
     setRuleUserLastData(state, value) {
         state.ruleUserLastData = value;
     },
@@ -34,13 +52,19 @@ const mutations = {
     },
     setEditorType(state, value) {
         state.editorType = value;
-    }, 
+    },
     setAllDone(state, value) {
         state.allDone = value;
+    },
+    setAllDestDetails(state, value) {
+        state.allDestDetails = value;
     }
 }
 
 const actions = {
+    setRuleEditorDataAction({ commit }, value) {
+        commit('setRuleEditorData', value)
+    },
     setRuleMetaDataAction({ commit }, value) {
         commit('setRuleMetaData', value)
     },
@@ -59,8 +83,10 @@ const actions = {
     setAllDoneAction({ commit }, value) {
         commit('setAllDone', value)
     },
+    setAllDestDetailsAction({ commit }, value) {
+        commit('setAllDestDetails', value)
+    },
 }
-
 
 const codeEditorStore = {
     namespaced: true,

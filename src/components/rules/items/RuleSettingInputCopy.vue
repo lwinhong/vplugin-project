@@ -11,6 +11,7 @@
           placeholder="未设置"
           readonly
           :size="$editorUtil.itemStyle.itemInputSize"
+          style="width: 210px"
         >
           <Button
             slot="append"
@@ -28,12 +29,18 @@
         </Input>
       </template>
     </item-template>
-    <RuleSettingEntityFieldMapping
-      :showModal="mappingModalVisible"
-      :data="settingData"
-      ref="entityFieldMapping"
+    <Modal
+      v-model="mappingModalVisible"
+      mask
+      :mask-closable="false"
+      title="活动集参数映射"
+      :width="800"
       @on-ok="onEntityFieldMappingOk"
-    />
+    >
+      <RuleSettingEntityFieldMapping
+        :data="settingDataTable"
+        ref="entityFieldMapping"
+    /></Modal>
   </div>
 </template>
 <script>
@@ -52,6 +59,7 @@ export default {
       popupType: "inputCopy",
       /*保存的数据*/
       settingData: [],
+      settingDataTable: [],
     };
   },
   methods: {
@@ -81,22 +89,25 @@ export default {
       }
       return key;
     },
-    onEntityFieldMappingOk(settingDataTable) {
-      this.settingData = this.$editorUtil.deepCopy(settingDataTable);
+    onEntityFieldMappingOk() {
+      debugger
+      this.settingData = this.$editorUtil.deepCopy(this.settingDataTable);
       //this.mappingModalVisible = false;
     },
 
     openEntityFieldMappingEditor(row, index) {
       //let _this = this;
-      this.$refs.entityFieldMapping.show({
-        row,
-        index,
-      });
+      // this.$refs.entityFieldMapping.show({
+      //   row,
+      //   index,
+      // });
+      this.settingDataTable = this.$editorUtil.deepCopy(this.settingData);
+      this.mappingModalVisible = true;
     },
-    getEmptyOutConfig() {
+
+    getEmptyInConfig() {
       return {
         dest: "",
-        destType: "entity",
         srcType: "returnValue", //来源类型 returnValue，expression
         srcCode: this.itemData.editorKey,
         srcSetting: "",
@@ -106,8 +117,9 @@ export default {
   },
 
   mounted() {
-    this.value = this.itemData.userData.paramSourceValue || this.itemData.default || "";
-    this.settingData = [this.getEmptyOutConfig()];
+    this.value =
+      this.itemData.userData.paramSourceValue || this.itemData.default || "";
+    this.settingData = [this.getEmptyInConfig()];
   },
   watch: {
     settingData: {

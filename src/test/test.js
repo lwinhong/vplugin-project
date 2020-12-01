@@ -780,7 +780,7 @@ const contribution = {
                         "display": "hdfhd完善",
                         "IsDefault": false
                     }
-                ],
+                ]
             },
             "inputcharexp": {
                 "type": "char",
@@ -812,7 +812,7 @@ const contribution = {
                 "type": "integer",
                 "name": "int类型",
                 "default": null,
-                "remark": null,
+                "remark": "int类型int类型int类型int类型int类型int类型int类型",
                 "editor": "outCopy",
                 "dropdownData": null
             },
@@ -859,6 +859,47 @@ const contribution = {
         }
     }
 }
+
+const dests = {
+    "ruleSetOutput": {
+        "text": "方法输出",
+        "value": [{
+            "Code": "result",
+            "Name": "",
+            "CodeName": "result(1)",
+            "DataType": "entity",
+            "InitValue": "",
+            "Desc": ""
+        }
+        ]
+    },
+    "ruleSetVariant": {
+        "text": "方法变量",
+        "value": [{
+            "Code": "result2",
+            "Name": "",
+            "CodeName": "result(2)",
+            "DataType": "entity",
+            "InitValue": "",
+            "Desc": ""
+        }
+        ]
+    },
+    "systemVariant": {
+        "text": "构件变量",
+        "value": [{
+            "Code": "result3",
+            "Name": "",
+            "CodeName": "result(3)",
+            "DataType": "entity",
+            "InitValue": "",
+            "Desc": ""
+        }
+        ]
+    }
+}
+
+
 export default {
-    userData, contribution, metaData
+    userData, contribution, metaData, dests
 }

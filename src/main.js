@@ -35,7 +35,8 @@ const app = new Vue({
   components: { App },
   template: '<App ref="app"></App>',
   methods: {
-    ...mapActions(["setRuleMetaDataAction", "setAllDoneAction", "setEditorTypeAction"]),
+    ...mapActions(["setRuleMetaDataAction", "setAllDoneAction",
+      "setEditorTypeAction", "setAllDestDetailsAction", "setRuleEditorDataAction"]),
     save() {
       return this.$refs.app.save();
     },
@@ -43,9 +44,9 @@ const app = new Vue({
       return this.$refs.app.validate(showMsg);
     }
   },
-  computed: {
-    ...mapState(["ruleMetaData", "ruleUserLastData"]),
-  },
+  // computed: {
+  //   ...mapState(["ruleMetaData", "ruleUserLastData"]),
+  // },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
     console.log("mounted")
@@ -54,6 +55,10 @@ const app = new Vue({
         window.vPlugin.execute("appMounted");
       } else {
         _onLoad(test.contribution, test.newMetaData, test.userData);
+        if (test.dests) {
+          app.setAllDestDetailsAction(test.dests);
+        }
+        
       }
     }, 100);
   }
@@ -73,6 +78,7 @@ const onLoad = function (data) {
 
   console.log(metaData)
   _onLoad(contribution, metaData, userData);
+ 
 }
 
 /**
@@ -83,7 +89,7 @@ const onLoad = function (data) {
  */
 const _onLoad = (contribution, metaData, userData, context) => {
   app.setEditorTypeAction(editorType)
-  let init = () => {
+  let init = async () => {
     let editorMeta = null;
     if (contribution && contribution.vpluginRule)
       editorMeta = contribution.vpluginRule;
@@ -91,7 +97,12 @@ const _onLoad = (contribution, metaData, userData, context) => {
       editorMeta = {};
     try {
       editorUtil.mergeData(editorMeta, contribution, metaData, userData)
-      app.setRuleMetaDataAction(editorMeta);
+      app.setRuleMetaDataAction(metaData);
+      app.setRuleEditorDataAction(editorMeta);
+      // if (editorMeta.outputs) {
+      //   let dest = await editorUtil.loadDestDetails();
+      //   app.setAllDestDetailsAction(dest);
+      // }
 
       console.log("allDone")
       if (window.vPlugin)

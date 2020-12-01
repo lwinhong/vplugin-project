@@ -244,7 +244,6 @@ editorUtil.mergeData = function (contribution, editorMeta, metaData, userData) {
     }
     merage(contribution.inputs, userData ? userData.ruleInputParams : null);
     merage(contribution.outputs, userData ? userData.ruleOutputParams : null);
-
 }
 
 /**
@@ -276,6 +275,46 @@ editorUtil.saveSimpleCommon = (itemData, value) => {
     return result;
 }
 
+editorUtil.loadDestDetails = () => {
+    return new Promise((resolve, reject) => {
+        if (window.vPlugin) {
+            window.vPlugin.execute(
+                "getDestDetails",
+                (value) => {
+                    console.log(value);
+                    let details = JSON.parse(value);
+                    resolve(details)
+                }
+            );
+        } else {
+            resolve({});
+        }
+    })
+}
+
+// editorUtil.getDestDetails = (destType) => {
+//     let _this = this;
+
+//     if (_this.DestDetails) {
+//         if (destType) {
+//             return _this.DestDetails[destType];
+//         }
+//         return _this.DestDetails;
+//     }
+
+//     if (window.vPlugin) {
+//         window.vPlugin.execute(
+//             "getDestDetails",
+//             (value) => {
+//                 console.log(value);
+//                 _this.DestDetails = JSON.parse(value);
+//                 if (callBack) {
+//                     callBack(_this.DestDetails)
+//                 }
+//             }
+//         );
+//     }
+// }
 
 editorUtil.itemStyle = {
     itemInputSize: "small"

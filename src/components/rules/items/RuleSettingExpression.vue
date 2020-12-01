@@ -11,19 +11,20 @@
         :content="value"
         placement="bottom-start"
       > -->
-        <Input
-          v-model="valueDisplay"
-          placeholder="未设置"
-          readonly
+      <Input
+        v-model="valueDisplay"
+        placeholder="未设置"
+        readonly
+        style="width:210px;"
+        :size="$editorUtil.itemStyle.itemInputSize"
+      >
+        <Button
+          slot="append"
+          icon="md-open"
           :size="$editorUtil.itemStyle.itemInputSize"
-        >
-          <Button
-            slot="append"
-            icon="md-open"
-            :size="$editorUtil.itemStyle.itemInputSize"
-            @click="onPopup"
-          />
-        </Input>
+          @click="onPopup"
+        />
+      </Input>
       <!-- </Poptip> -->
     </template>
   </item-template>
@@ -51,7 +52,6 @@ export default {
       return result;
     },
     onPopup() {
-  
       console.log(this.popupType);
       if (window.vPlugin) {
         const _this = this;
@@ -75,7 +75,8 @@ export default {
     },
   },
   mounted() {
-    this.value = this.itemData.userData.paramSourceValue || this.itemData.default || "";
+    this.value =
+      this.itemData.userData.paramSourceValue || this.itemData.default || "";
   },
   watch: {
     value(newValue, oldValue) {

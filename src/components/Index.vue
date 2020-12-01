@@ -1,12 +1,12 @@
 <template>
   <div class="box">
-    <Row :gutter="56">
-      <Col :span="colSpan">
-        <h5>参数设置</h5>
+    <Row >
+      <Col :span="colSpan" class="mod-input">
+        <h5 class="mod-title">参数设置</h5>
         <Row>
           <Col
             span="24"
-            v-for="(val, name, index) in ruleMetaData.inputs"
+            v-for="(val, name, index) in ruleEditorData.inputs"
             :key="index"
           >
             <RuleSettingBoolean
@@ -63,12 +63,12 @@
           </Col>
         </Row>
       </Col>
-      <Col :span="colSpan" v-if="ruleMetaData.outputs">
-        <h5>返回值设置</h5>
+      <Col :span="colSpan" v-if="ruleEditorData.outputs" class="mod-output">
+        <h5 class="mod-title">返回值设置</h5>
         <Row>
           <Col
             span="24"
-            v-for="(val, name, index) in ruleMetaData.outputs"
+            v-for="(val, name, index) in ruleEditorData.outputs"
             :key="index"
           >
             <RuleSettingOutCopy
@@ -89,12 +89,12 @@ const inputTypeCode = "ruleInputParams";
 const outputTypeCode = "ruleOutputParams";
 export default {
   computed: {
-    ...mapState(["ruleMetaData", "allDone"]),
+    ...mapState(["ruleEditorData", "allDone"]),
     editorUtil() {
       return this.$editorUtil;
     },
     colSpan() {
-      return this.ruleMetaData.outputs ? 12 : 24;
+      return this.ruleEditorData.outputs ? 12 : 24;
     },
     outputTypeCode() {
       return outputTypeCode;
@@ -108,8 +108,8 @@ export default {
       let result = [];
       let index = 0;
       //校验各个item的值
-      for (const key in this.ruleMetaData) {
-        if (this.ruleMetaData.hasOwnProperty(key)) {
+      for (const key in this.ruleEditorData) {
+        if (this.ruleEditorData.hasOwnProperty(key)) {
           const refName = this.getItemKey(index);
           const vueInstance = this.$refs[refName][0];
           if (vueInstance) {
@@ -125,7 +125,7 @@ export default {
               );
             }
             if (message) {
-              const metaData = this.ruleMetaData[key];
+              const metaData = this.ruleEditorData[key];
               result.push({
                 key: key,
                 name: metaData.name,
@@ -160,15 +160,15 @@ export default {
         }
       };
 
-      if (this.ruleMetaData.inputs) {
+      if (this.ruleEditorData.inputs) {
         let inputs = [];
-        saveHandler(this.ruleMetaData.inputs, inputs, inputTypeCode);
+        saveHandler(this.ruleEditorData.inputs, inputs, inputTypeCode);
         result[inputTypeCode] = inputs;
       }
 
-      if (this.ruleMetaData.outputs) {
+      if (this.ruleEditorData.outputs) {
         let outputs = [];
-        saveHandler(this.ruleMetaData.outputs, outputs, outputTypeCode);
+        saveHandler(this.ruleEditorData.outputs, outputs, outputTypeCode);
         result[outputTypeCode] = outputs;
       }
 

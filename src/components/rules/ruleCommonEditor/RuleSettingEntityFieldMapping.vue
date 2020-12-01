@@ -1,41 +1,113 @@
 <template>
-  <Modal
+  <!-- <Modal
     v-model="visible"
     mask
     :mask-closable="false"
-    title="方法实体字段映射"
+    title="实体字段映射"
     :width="800"
     @on-ok="ok"
     @on-cancel="cancel"
-  >
+  > -->
+  <div>
+    <div>
+      <Button
+        type="text"
+        :size="$editorUtil.itemStyle.itemInputSize"
+        icon="md-add"
+        @click="addNewRow"
+      >
+        新增</Button
+      >
+      <!-- <Button
+        type="text"
+        :size="$editorUtil.itemStyle.itemInputSize"
+        icon="md-remove"
+         @click="removeRow()"
+        >移除</Button
+      > -->
+      <Button
+        type="text"
+        :size="$editorUtil.itemStyle.itemInputSize"
+        icon="md-done-all"
+        >引入全部</Button
+      >
+      <Button
+        type="text"
+        :size="$editorUtil.itemStyle.itemInputSize"
+        icon="md-close"
+        >清空</Button
+      >
+    </div>
     <Table
       :data="settingDataTable"
       :columns="columns"
       :size="$editorUtil.itemStyle.itemInputSize"
+      border
+      highlight-row
     >
       <template slot-scope="{ row, index }" slot="destSlot">
-        <Select style="width: 100%" transfer>
+        <Select
+          style="width: 100%"
+          transfer
+          :value="row.dest"
+          :size="$editorUtil.itemStyle.itemInputSize"
+          @on-change="updateTableRow(row, index)"
+        >
           <Option :value="1">{{ 1 }}</Option>
           <Option :value="2">{{ 2 }}</Option>
         </Select>
       </template>
       <template slot-scope="{ row, index }" slot="srcTypeSlot">
-        <Select style="width: 100%" transfer>
+        <Select
+          style="width: 100%"
+          transfer
+          :value="row.srcType"
+          :size="$editorUtil.itemStyle.itemInputSize"
+          @on-change="updateTableRow(row, index)"
+        >
+          <Option
+            v-for="item in srcTypes"
+            :value="item.value"
+            :key="item.value"
+            >{{ item.name }}</Option
+          >
+        </Select>
+      </template>
+      <template slot-scope="{ row, index }" slot="srcValueSlot">
+        <Select
+          style="width: 100%"
+          transfer
+          :size="$editorUtil.itemStyle.itemInputSize"
+          @on-change="updateTableRow(row, index)"
+        >
           <Option :value="1">{{ 1 }}</Option>
           <Option :value="2">{{ 2 }}</Option>
         </Select>
       </template>
-      <template slot-scope="{ row, index }" slot="srcSettingSlot">
-        <Select style="width: 100%" transfer>
-          <Option :value="1">{{ 1 }}</Option>
-          <Option :value="2">{{ 2 }}</Option>
-        </Select>
+      <template slot-scope="{ row, index }" slot="actionSlot">
+        <Button
+          type="primary"
+          :size="$editorUtil.itemStyle.itemInputSize"
+          @click="addNewRow(index)"
+          >新增</Button
+        >
+        <Button
+          type="error"
+          :size="$editorUtil.itemStyle.itemInputSize"
+          @click="removeRow(index)"
+          >移除</Button
+        >
       </template>
     </Table>
-  </Modal>
+  </div>
+
+  <!-- </Modal> -->
 </template>
 
 <script>
+import { createNamespacedHelpers } from "vuex";
+const { mapState } = createNamespacedHelpers("ruleEditorStore");
+
 export default {
   props: {
     data: Array,
@@ -53,26 +125,35 @@ export default {
         {
           title: "目标",
           key: "dest",
-          align: "center",
           slot: "destSlot",
         },
         {
           title: "来源类型",
           key: "srcType",
-          align: "center",
           width: 120,
           slot: "srcTypeSlot",
         },
         {
           title: "来源",
-          key: "srcSetting",
-          align: "center",
-          slot: "srcSettingSlot",
+          key: "srcValue",
+          slot: "srcValueSlot",
         },
+        {
+          title: "操作",
+          key: "action",
+          align: "center",
+          slot: "actionSlot",
+          width: 140,
+        },
+      ],
+      srcTypes: [
+        { name: "字段", value: "field" },
+        { name: "表达式", value: "expression" },
       ],
     };
   },
   computed: {
+    ...mapState(["ruleMetaData"]),
     settingDataTable() {
       return this.data;
     },
@@ -105,6 +186,26 @@ export default {
     cancel() {
       this.$emit("change", false);
       this.$emit("cancel");
+    },
+    addNewRow() {
+      let item = this.newRow();
+      this.settingDataTable.push(item);
+    },
+    removeRow(index) {
+      this.settingDataTable.splice(index, 1);
+    },
+    newRow() {
+      let item = {
+        destField: "",
+        destType: "",
+        srcValueType: "", //来源的类型 expression ，field
+        srcValue: "",
+      };
+      return item;
+    },
+    updateTableRow(row, index) {
+      debugger
+      this.settingDataTable[index] = row;
     },
   },
   // 监控data中的数据变化

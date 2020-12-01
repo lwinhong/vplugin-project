@@ -62,6 +62,7 @@ export default {
 </script>
 
 <style>
+
 :root {
     --theme-font: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, \\5FAE\8F6F\96C5\9ED1, Arial, sans-serif;
     --theme-font-size: 11px;
@@ -70,7 +71,7 @@ export default {
     --theme-title-color: #262626;
     --theme-content-color: #585858;
     --theme-footer-color: var(--theme-content-color);
-    --theme-box-padding: 16px;
+    --theme-box-padding: 8px 12px;
     --theme-validate-color: red
 }
 
@@ -78,12 +79,41 @@ body {
     background: var(--theme-bg)
 }
 
+/*容器*/
 .box {
-    
-    margin: 0 40px;
-    padding: 0 8px
+    padding: 0 8px;
 }
 
+.box:after {
+    content:'';
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:50%;
+    margin-left:-4px;
+    border-left:1px solid #dcdee2;
+
+}
+
+/*模块*/
+.mod-input{ /*参数设置模块*/
+    padding-right:30px;
+}
+
+.mod-output{ /*返回值设置模块*/
+    padding-right:22px;
+}
+
+.mod-title{
+    margin: 16px 0 16px 32px;
+    padding-left: 5px;
+    line-height: 1.2;
+    font-size: 16px;
+    color: #252525;
+    border-left: 2px solid #2d8cf0;
+}
+
+/*配置子项*/
 .item-container {
     position: relative;
     padding-left: 22px
@@ -99,12 +129,13 @@ body {
 
 .item-cont:hover,
 .item-contSelected {
+    border-radius:4px;
     background: var(--theme-bg-over)
 }
 
 .item-title {
-    padding-bottom:6px;
-    font-size: calc(var(--theme-font-size) + 2px);
+    padding-bottom: 6px;
+    font-size: calc(var(--theme-font-size) + 2px)
 }
 
 .item-name {
