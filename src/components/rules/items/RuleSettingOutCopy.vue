@@ -57,6 +57,7 @@ export default {
       popupType: "outCopy",
       /*保存的数据*/
       settingData: [],
+
       /*保存的数据*/
       settingDataTable: [],
     };
@@ -71,7 +72,26 @@ export default {
         result.srcType = settingData.srcType;
         result.dest = settingData.dest;
         result.destType = settingData.destType;
-        result.destFieldMapping = settingData.destFieldMapping;
+        if (settingData.hasOwnProperty("destFieldMapping")) {
+          let mappings = new Array();
+
+          if (settingData.destFieldMapping != null) {
+            for (
+              let index = 0;
+              index < settingData.destFieldMapping.length;
+              index++
+            ) {
+              const element = settingData.destFieldMapping[index];
+              let map = {};
+              map.destField = element.destField;
+              map.destType = element.destType;
+              map.srcValueType = element.srcValueType;
+              map.srcValue = element.srcValue;
+              mappings.push(map);
+            }
+            result.destFieldMapping = mappings;
+          }
+        }
       }
       return result;
     },
@@ -94,6 +114,7 @@ export default {
       return key;
     },
     mappingOk() {
+      debugger;
       this.settingData = this.$editorUtil.deepCopy(this.settingDataTable);
     },
     getEmptyOutConfig() {
@@ -120,6 +141,7 @@ export default {
     settingData: {
       handler(newValue, oldValue) {
         if (newValue[0].srcType == "entity") {
+          debugger;
           this.valueDisplay = newValue[0].destFieldMapping ? "已设置" : "";
         } else {
           this.valueDisplay = newValue[0].dest ? "已设置" : "";

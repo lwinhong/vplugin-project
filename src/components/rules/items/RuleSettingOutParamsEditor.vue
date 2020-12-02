@@ -7,16 +7,17 @@
     @on-ok="ok"
     @on-cancel="cancel"
   > -->
-  <Table
-    :columns="setTableColumn"
-    :data="settingDataTable"
-    width="100%"
-    height="162"
-    border
-    :size="$editorUtil.itemStyle.itemInputSize"
-  >
-    <template slot-scope="{ row, index }" slot="destTypeSlot">
-      <!-- <Dropdown trigger="click" transfer>
+  <div>
+    <Table
+      :columns="setTableColumn"
+      :data="settingDataTable"
+      width="100%"
+      height="162"
+      border
+      :size="$editorUtil.itemStyle.itemInputSize"
+    >
+      <template slot-scope="{ row, index }" slot="destTypeSlot">
+        <!-- <Dropdown trigger="click" transfer>
         <a>
           <span
             >{{ getItemName(destTypeItems, row.destType) || "请选择" }}
@@ -39,39 +40,38 @@
       
        @on-select="onDestTypeChanged(row.destType, item.details, row, index)"-->
 
-      <Select
-        style="width: 100%"
-        transfer
-        :value="row.destType"
-        :size="$editorUtil.itemStyle.itemInputSize"
-        @on-change="onDestTypeChanged($event, row, index)"
-      >
-        <Option
-          v-for="item in destTypeItems"
-          :key="item.value"
-          :value="item.value"
-          >{{ item.name }}</Option
+        <Select
+          style="width: 100%"
+          transfer
+          :value="row.destType"
+          :size="$editorUtil.itemStyle.itemInputSize"
+          @on-change="onDestTypeChanged($event, row, index)"
         >
-      </Select>
-    </template>
-    <template slot-scope="{ row, index }" slot="destSlot">
-       <Select
-        style="width: 100%"
-        transfer
-        :value="row.dest"
-        :size="$editorUtil.itemStyle.itemInputSize"
-        @on-change="onDestChanged($event, row, index)"
-         v-if="row.destType != 'control'"
-
-      >
-        <Option
-          v-for="item in destItems"
-          :key="item.value"
-          :value="item.value"
-          >{{ item.name }}</Option
+          <Option
+            v-for="item in destTypeItems"
+            :key="item.value"
+            :value="item.value"
+            >{{ item.name }}</Option
+          >
+        </Select>
+      </template>
+      <template slot-scope="{ row, index }" slot="destSlot">
+        <Select
+          style="width: 100%"
+          transfer
+          :value="row.dest"
+          :size="$editorUtil.itemStyle.itemInputSize"
+          @on-change="onDestChanged($event, row, index)"
+          v-if="row.destType != 'control'"
         >
-      </Select>
-      <!-- <Dropdown trigger="click" transfer v-if="row.destType != 'control'">
+          <Option
+            v-for="item in destItems"
+            :key="item.value"
+            :value="item.value"
+            >{{ item.name }}</Option
+          >
+        </Select>
+        <!-- <Dropdown trigger="click" transfer v-if="row.destType != 'control'">
         <a>
           <span>{{ row.dest ? row.dest : "请选择" }} </span>
           <Icon type="md-arrow-dropdown" size="18" />
@@ -87,65 +87,66 @@
           </DropdownItem>
         </DropdownMenu>
       </Dropdown> -->
-      <template v-else>
-        <span>{{ row.dest ? row.dest : "未配置" }}</span>
+        <template v-else>
+          <span>{{ row.dest ? row.dest : "未配置" }}</span>
+          <Button
+            icon="md-open"
+            type="text"
+            :size="$editorUtil.itemStyle.itemInputSize"
+            @click="openControlSelector(row, row.dest)"
+          ></Button>
+        </template>
+      </template>
+      <template slot-scope="{ row, index }" slot="srcTypeSlot">
+        <Dropdown trigger="click">
+          <a>
+            <span>{{ getItemName(srcTypeItems, row.srcType) }} </span>
+            <!-- <Icon type="md-arrow-dropdown" size="18" /> -->
+          </a>
+          <DropdownMenu slot="list">
+            <DropdownItem
+              v-for="value in srcTypeItems"
+              :key="value.value"
+              :selected="value.value == row.srcType"
+              @click.native="onSrcTypeChanged(value.value, row, index)"
+            >
+              {{ value.name }}
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </template>
+      <template slot-scope="{ row, index }" slot="srcSettingSlot">
+        <!-- <span>{{ row.srcCode ? "已配置" : "未配置" }}</span> -->
+        <span>{{
+          row.scrType == "entity"
+            ? row.destFieldMapping
+              ? "已配置"
+              : "未配置"
+            : row.srcCode
+        }}</span>
         <Button
+          v-if="isMappingVisble"
           icon="md-open"
           type="text"
           :size="$editorUtil.itemStyle.itemInputSize"
-          @click="openControlSelector(row, row.dest)"
+          @click="openMappingEditor(row, index)"
         ></Button>
       </template>
-    </template>
-    <template slot-scope="{ row, index }" slot="srcTypeSlot">
-      <Dropdown trigger="click">
-        <a>
-          <span>{{ getItemName(srcTypeItems, row.srcType) }} </span>
-          <!-- <Icon type="md-arrow-dropdown" size="18" /> -->
-        </a>
-        <DropdownMenu slot="list">
-          <DropdownItem
-            v-for="value in srcTypeItems"
-            :key="value.value"
-            :selected="value.value == row.srcType"
-            @click.native="onSrcTypeChanged(value.value, row, index)"
-          >
-            {{ value.name }}
-          </DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
-    </template>
-    <template slot-scope="{ row, index }" slot="srcSettingSlot">
-      <!-- <span>{{ row.srcCode ? "已配置" : "未配置" }}</span> -->
-      <span>{{
-        row.scrType == "entity"
-          ? row.destFieldMapping
-            ? "已配置"
-            : "未配置"
-          : row.srcCode
-      }}</span>
-      <Button
-        v-if="row.scrType == 'entity'"
-        icon="md-open"
-        type="text"
-        :size="$editorUtil.itemStyle.itemInputSize"
-        @click="openMappingEditor(row, index)"
-      ></Button>
-    </template>
-  </Table>
+    </Table>
 
-  <!-- <Modal
-      v-model="mappingVisible"
+    <Modal
+      v-model="mappingModalVisible"
       mask
-      title="方法实体字段映射"
+      :mask-closable="false"
+      title="活动集参数映射"
       :width="800"
       @on-ok="onEntityFieldMappingOk"
     >
-      <RuleSettingEntityFieldMapping
-      ref="entityFieldMapping"
-    />
-    </Modal> -->
-  <!-- </Modal> -->
+      <RuleSettingOutputEntityFieldMapping
+        :data="settingMappingData"
+        ref="entityFieldMapping"
+    /></Modal>
+  </div>
 </template>
 
 <script>
@@ -169,9 +170,13 @@ export default {
     event: "change",
   },
   computed: {
-    ...mapState(["allDestDetails"]),
+    ...mapState(["allDestDetails", "ruleMetaData"]),
+
     settingDataTable() {
       return this.data;
+    },
+    isMappingVisble() {
+      return this.isDataEntity(this.data[0].srcCode);
     },
     destTypeItems() {
       // return [
@@ -196,15 +201,37 @@ export default {
       //   },
       // ];
       let items = this.getDestDetails();
-      return items;
+      debugger;
+      let result = new Array();
+      let info = this.getOutputMetaInfo()(this.data[0].srcCode);
+      for (let index = 0; index < items.length; index++) {
+        const element = items[index];
+
+        if (element.hasOwnProperty("details")) {
+          if (element.details != null) {
+            for (let i = 0; i < element.details.length; i++) {
+              const item = element.details[i];
+              if (item.DataType ==  info.type) {
+                result.push(element);
+              }
+            
+            }
+          }
+        }
+      }
+
+      return result;
     },
   },
   data() {
     // 这里存放数据
     return {
+      mappingModalVisible: false,
       visible: false,
       srcTypeItems: [srcTypeReturnValue],
       destItems: [],
+      //这里是映射信息
+      settingMappingData: [],
       setTableColumn: [
         {
           title: "目标类型",
@@ -233,11 +260,16 @@ export default {
   },
   // 方法集合
   methods: {
-    ...mapGetters(["getDestDetails"]),
+    ...mapGetters(["getDestDetails", "getOutputMetaInfo"]),
     ok() {
       this.$emit("change", false);
       this.$emit("ok", this.settingDataTable);
     },
+    isDataEntity(metaCode) {
+      var metaInfo = this.getOutputMetaInfo()(metaCode);
+      return metaInfo.type == "entity";
+    },
+
     cancel() {
       this.$emit("change", false);
       this.$emit("cancel");
@@ -252,7 +284,18 @@ export default {
       return key;
     },
     openMappingEditor(row, index) {
-      let _this = this;
+      if (this.isMappingVisble) {
+        //这里获取Map ing信息 直接给下游的容器使用
+        if (this.settingMappingData.length == 0) {
+          if (this.settingDataTable[0].destFieldMapping != null) {
+            this.settingMappingData = this.$editorUtil.deepCopy(
+              this.settingDataTable[0].destFieldMapping
+            );
+          } else this.settingMappingData = new Array();
+        }
+        this.mappingModalVisible = true;
+        return;
+      }
       if (row.srcType == "returnValue") {
         // this.$refs.entityFieldMapping.show({
         //   row,
@@ -273,9 +316,12 @@ export default {
         }
       }
     },
-    onEntityFieldMappingOk(context, mapping) {
-      context.row.destFieldMapping = mapping;
-      _this.updateTableRow(context.row, context.index);
+    onEntityFieldMappingOk() {
+      this.settingMappingData = this.$editorUtil.deepCopy(
+        this.settingMappingData
+      );
+      this.settingDataTable[0].destFieldMapping = this.settingMappingData;
+      //this.data.destFieldMapping=this.settingMappingData;
     },
     onDestChanged(value, row, index) {
       row.dest = value;
