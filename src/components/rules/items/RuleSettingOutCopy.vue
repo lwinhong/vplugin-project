@@ -42,6 +42,8 @@
   </div>
 </template>
 <script>
+import { createNamespacedHelpers } from "vuex";
+const { mapState, mapGetters } = createNamespacedHelpers("ruleEditorStore");
 //import RuleSettingOutParamsEditor from "../ruleCommonEditor/RuleSettingOutParamsEditor";
 export default {
   name: "RuleSettingOutCopy",
@@ -63,6 +65,7 @@ export default {
     };
   },
   methods: {
+    ...mapGetters(["getDestDetails", "getOutputMetaInfo"]),
     save() {
       let result = {};
       result.srcCode = this.itemData.editorKey; //来源，也是元数据key，固定
@@ -130,6 +133,7 @@ export default {
   },
 
   mounted() {
+    debugger;
     this.value = this.itemData.userData || this.itemData.default || "";
     let empty = this.getEmptyOutConfig();
     empty.destFieldMapping = this.itemData.userData
@@ -140,11 +144,15 @@ export default {
   watch: {
     settingData: {
       handler(newValue, oldValue) {
-        if (newValue[0].srcType == "entity") {
-          debugger;
-          this.valueDisplay = newValue[0].destFieldMapping ? "已设置" : "";
-        } else {
+        debugger;
+        if (newValue[0].srcType == "returnValue") {
           this.valueDisplay = newValue[0].dest ? "已设置" : "";
+          let info = this.getOutputMetaInfo(newValue[0].srcCode);
+          if (info.type == "entity") {
+            this.valueDisplay = newValue[0].destFieldMapping ? "已设置" : "";
+          } else {
+            this.valueDisplay = newValue[0].dest ? "已设置" : "";
+          }
         }
       },
       deep: true,
