@@ -201,7 +201,26 @@ export default {
       //   },
       // ];
       let items = this.getDestDetails();
-      return items;
+      debugger;
+      let result = new Array();
+      let info = this.getOutputMetaInfo()(this.data[0].srcCode);
+      for (let index = 0; index < items.length; index++) {
+        const element = items[index];
+
+        if (element.hasOwnProperty("details")) {
+          if (element.details != null) {
+            for (let i = 0; i < element.details.length; i++) {
+              const item = element.details[i];
+              if (item.DataType ==  info.type) {
+                result.push(element);
+              }
+            
+            }
+          }
+        }
+      }
+
+      return result;
     },
   },
   data() {
@@ -267,7 +286,6 @@ export default {
     openMappingEditor(row, index) {
       if (this.isMappingVisble) {
         //这里获取Map ing信息 直接给下游的容器使用
-        debugger;
         if (this.settingMappingData.length == 0) {
           if (this.settingDataTable[0].destFieldMapping != null) {
             this.settingMappingData = this.$editorUtil.deepCopy(
@@ -302,7 +320,7 @@ export default {
       this.settingMappingData = this.$editorUtil.deepCopy(
         this.settingMappingData
       );
-      this.settingDataTable[0].destFieldMapping=this.settingMappingData;
+      this.settingDataTable[0].destFieldMapping = this.settingMappingData;
       //this.data.destFieldMapping=this.settingMappingData;
     },
     onDestChanged(value, row, index) {
