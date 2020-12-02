@@ -86,10 +86,7 @@
           transfer
           :value="row.fieldValueType"
           :size="$editorUtil.itemStyle.itemInputSize"
-          @on-change="
-            row.fieldValueType = $event;
-            updateTableRow(row, index);
-          "
+          @on-change="onFieldValueTypeChanged($event, row, index)"
         >
           <Option
             v-for="item in srcTypes"
@@ -100,7 +97,17 @@
         </Select>
       </template>
       <template slot-scope="{ row, index }" slot="fieldValueSlot">
+        <div v-if="row.fieldValueType == 'expression'">
+          <span>{{ row.fieldValue }}</span>
+          <Button
+            icon="md-open"
+            type="text"
+            :size="$editorUtil.itemStyle.itemInputSize"
+            @click="openExpressionEditor(row, index)"
+          ></Button>
+        </div>
         <Select
+          v-else
           style="width: 100%"
           transfer
           :value="row.fieldValue"
@@ -302,6 +309,26 @@ export default {
           }
           this.sourceEntityFields = returnValue;
         });
+    },
+    onFieldValueTypeChanged(value, row, index) {
+      row.fieldValue = "";
+      row.fieldValueType = value;
+      this.updateTableRow(row, index);
+    },
+    openExpressionEditor(row, index) {
+      let _this = this;
+      if (window.vPlugin) {
+        let callBack = (expression) => {
+          row.fieldValue = expression;
+          _this.updateTableRow(row, index);
+        };
+        window.vPlugin.execute(
+          "openExpression",
+          row.srcCode,
+          //_this.itemData.type,
+          callBack
+        );
+      }
     },
   },
   // 监控data中的数据变化

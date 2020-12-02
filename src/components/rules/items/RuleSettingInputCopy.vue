@@ -73,13 +73,10 @@ export default {
     save() {
       let result = {};
       result.paramCode = this.itemData.editorKey; //来源，也是元数据key，固定
-      if (this.settingData && this.settingData.length > 0) {
-        let settingData = this.settingData[0];
+      result.paramSourceValue = this.settingData.paramSourceValue;
+      result.paramSourceType = this.settingData.paramSourceType;
+      result.paramFieldMapping = this.settingData.paramFieldMapping;
 
-        result.paramSourceValue = settingData.paramSourceValue;
-        result.paramSourceType = settingData.paramSourceType;
-        result.paramFieldMapping = settingData.paramFieldMapping;
-      }
       return result;
     },
     onSettingClick(cmd) {
@@ -97,9 +94,17 @@ export default {
       return key;
     },
     onEntityFieldMappingOk() {
-      this.settingData.paramFieldMapping = this.$editorUtil.deepCopy(
-        this.mappingData
-      );
+      debugger;
+      this.settingData.paramFieldMapping = [];
+      if (this.mappingData) {
+        this.mappingData.forEach((mapping) => {
+          this.settingData.paramFieldMapping.push({
+            paramEntityField: mapping.paramEntityField,
+            fieldValueType: mapping.fieldValueType,
+            fieldValue: mapping.fieldValue,
+          });
+        });
+      }
       this.mappingData = [];
     },
 
@@ -113,7 +118,7 @@ export default {
       } else {
         this.mappingData = [];
       }
-      this.$refs.entityFieldMapping.loadInputSource()
+      this.$refs.entityFieldMapping.loadInputSource();
       this.mappingModalVisible = true;
     },
   },
@@ -126,7 +131,7 @@ export default {
   watch: {
     settingData: {
       handler(newValue, oldValue) {
-        this.valueDisplay = newValue.paramSourceValue != "" ? "已设置" : "";
+        this.valueDisplay = newValue.paramFieldMapping != "" ? "已设置" : "";
       },
       deep: true,
     },
