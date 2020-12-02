@@ -3,7 +3,7 @@
     v-model="visible"
     mask
     :mask-closable="false"
-    title="实体字段映射"
+    title="实体字段映射12"
     :width="800"
     @on-ok="ok"
     @on-cancel="cancel"
