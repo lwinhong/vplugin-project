@@ -177,6 +177,7 @@ export default {
           destType: mapping.destType,
           srcValueType: mapping.srcValueType, //来源的类型 expression ，field
           srcValue: mapping.srcValue,
+          
         };
         mapping.push(item);
       });
