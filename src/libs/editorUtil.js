@@ -292,6 +292,37 @@ editorUtil.loadDestDetails = () => {
     })
 }
 
+editorUtil.loadInputSourceDetails = () => {
+    return new Promise((resolve, reject) => {
+        if (window.vPlugin) {
+            window.vPlugin.execute(
+                "getInputSourceDetails",
+                (value) => {
+                    resolve(JSON.parse(value))
+                }
+            );
+        } else {
+            resolve(null);
+        }
+    })
+}
+
+editorUtil.getEntityFields = (sourceType, entityCode) => {
+    return new Promise((resolve, reject) => {
+        if (window.vPlugin) {
+            window.vPlugin.execute(
+                "getEntityFields", sourceType, entityCode,
+                (value) => {
+                    resolve(JSON.parse(value))
+                }
+            );
+        } else {
+            resolve(null);
+        }
+    })
+}
+
+
 // editorUtil.getDestDetails = (destType) => {
 //     let _this = this;
 

@@ -58,7 +58,7 @@ const app = new Vue({
         if (test.dests) {
           app.setAllDestDetailsAction(test.dests);
         }
-        
+
       }
     }, 100);
   }
@@ -78,7 +78,7 @@ const onLoad = function (data) {
 
   console.log(metaData)
   _onLoad(contribution, metaData, userData);
- 
+
 }
 
 /**
@@ -99,10 +99,11 @@ const _onLoad = (contribution, metaData, userData, context) => {
       editorUtil.mergeData(editorMeta, contribution, metaData, userData)
       app.setRuleMetaDataAction(metaData);
       app.setRuleEditorDataAction(editorMeta);
-      // if (editorMeta.outputs) {
-      //   let dest = await editorUtil.loadDestDetails();
-      //   app.setAllDestDetailsAction(dest);
-      // }
+      if (editorMeta.outputs) {
+        let dest = await editorUtil.loadDestDetails();
+        if (dest)
+          app.setAllDestDetailsAction(dest);
+      }
 
       console.log("allDone")
       if (window.vPlugin)

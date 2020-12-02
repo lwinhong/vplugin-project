@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "jquery": "^3.5.1",
+    "uuid": "^8.3.1",
     "view-design": "^4.4.0",
     "vue": "^2.5.2",
     "vue-js-modal": "^2.0.0-rc.6",

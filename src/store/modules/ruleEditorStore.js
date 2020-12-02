@@ -32,6 +32,32 @@ const getters = {
         }
         return returnValue;
     },
+    getInputMetaInfo:(state, getters)=>(metaCode)=>{
+       return getters.getMetaInfo("inputs",metaCode);
+    },
+    getOutputMetaInfo:(state,getters)=>(metaCode)=>{
+        return getters.getMetaInfo("outputs",metaCode);
+     },
+    getMetaInfo: (state) => (inputOutputKey, metaCode) => {
+        let items = state.ruleMetaData.metaData;
+        if (items) {
+            for (let i = 0; i < items.length; i++) {
+                const element = items[i];
+                if (element.metaProperty == inputOutputKey) {
+                    let metaValueObjetct = element.metaValue;
+                    for (let x = 0; x < metaValueObjetct.length; x++) {
+                        const codeInfo = metaValueObjetct[x];
+                        if (codeInfo.code == metaCode) {
+
+                            return codeInfo;
+                        }
+                    }
+
+                }
+            }
+        }
+    },
+
 }
 
 const mutations = {
