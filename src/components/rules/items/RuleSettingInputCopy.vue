@@ -37,17 +37,17 @@
       :width="800"
       @on-ok="onEntityFieldMappingOk"
     >
-      <RuleSettingEntityFieldMapping
+      <RuleSettingInputEntityFieldMapping
         :data="settingDataTable"
         ref="entityFieldMapping"
     /></Modal>
   </div>
 </template>
 <script>
-import RuleSettingEntityFieldMapping from "../ruleCommonEditor/RuleSettingEntityFieldMapping";
+//import RuleSettingEntityFieldMapping from "../ruleCommonEditor/RuleSettingEntityFieldMapping";
 export default {
   name: "RuleSettingInputCopy",
-  components: { RuleSettingEntityFieldMapping },
+  //components: { RuleSettingEntityFieldMapping },
   props: {
     itemData: [Object, Array],
   },

@@ -109,6 +109,7 @@ import { createNamespacedHelpers } from "vuex";
 const { mapState } = createNamespacedHelpers("ruleEditorStore");
 
 export default {
+  name: "RuleSettingInputEntityFieldMapping",
   props: {
     data: Array,
     showModal: Boolean,
@@ -204,7 +205,7 @@ export default {
       return item;
     },
     updateTableRow(row, index) {
-      debugger
+      debugger;
       this.settingDataTable[index] = row;
     },
   },

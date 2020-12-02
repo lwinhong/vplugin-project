@@ -42,10 +42,10 @@
   </div>
 </template>
 <script>
-import RuleSettingOutParamsEditor from "../ruleCommonEditor/RuleSettingOutParamsEditor";
+//import RuleSettingOutParamsEditor from "../ruleCommonEditor/RuleSettingOutParamsEditor";
 export default {
   name: "RuleSettingOutCopy",
-  components: { RuleSettingOutParamsEditor },
+  //components: { RuleSettingOutParamsEditor },
   props: {
     itemData: [Object, Array],
   },

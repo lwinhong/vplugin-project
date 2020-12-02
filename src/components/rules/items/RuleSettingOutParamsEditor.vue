@@ -152,13 +152,13 @@
 const srcTypeExpression = { name: "表达式", value: "expression" };
 const srcTypeReturnValue = { name: "返回值", value: "returnValue" };
 
-import RuleSettingEntityFieldMapping from "./RuleSettingEntityFieldMapping";
+//import RuleSettingEntityFieldMapping from "./RuleSettingEntityFieldMapping";
 import { createNamespacedHelpers } from "vuex";
 const { mapState, mapGetters } = createNamespacedHelpers("ruleEditorStore");
 
 export default {
   name: "RuleSettingOutParamsEditor",
-  components: { RuleSettingEntityFieldMapping },
+  //components: { RuleSettingEntityFieldMapping },
   props: {
     data: Array,
     showModal: Boolean,
