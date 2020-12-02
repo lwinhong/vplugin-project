@@ -901,5 +901,5 @@ const dests = {
 
 
 export default {
-    userData, contribution, metaData, dests
+    userData, contribution, newMetaData:metaData, dests
 }

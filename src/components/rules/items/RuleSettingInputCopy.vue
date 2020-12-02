@@ -38,12 +38,14 @@
       @on-ok="onEntityFieldMappingOk"
     >
       <RuleSettingInputEntityFieldMapping
-        :data="settingDataTable"
+        :data="mappingData"
+        :itemData="itemData"
         ref="entityFieldMapping"
     /></Modal>
   </div>
 </template>
 <script>
+import { v4 as uuidv4 } from "uuid";
 //import RuleSettingEntityFieldMapping from "../ruleCommonEditor/RuleSettingEntityFieldMapping";
 export default {
   name: "RuleSettingInputCopy",
@@ -58,8 +60,13 @@ export default {
       valueDisplay: "",
       popupType: "inputCopy",
       /*保存的数据*/
-      settingData: [],
-      settingDataTable: [],
+      settingData: {
+        paramSourceValue: "",
+        paramSourceType: "",
+        paramCode: "",
+        paramFieldMapping: null,
+      },
+      mappingData: [],
     };
   },
   methods: {
@@ -90,41 +97,36 @@ export default {
       return key;
     },
     onEntityFieldMappingOk() {
-      debugger
-      this.settingData = this.$editorUtil.deepCopy(this.settingDataTable);
-      //this.mappingModalVisible = false;
+      this.settingData.paramFieldMapping = this.$editorUtil.deepCopy(
+        this.mappingData
+      );
+      this.mappingData = [];
     },
 
     openEntityFieldMappingEditor(row, index) {
-      //let _this = this;
-      // this.$refs.entityFieldMapping.show({
-      //   row,
-      //   index,
-      // });
-      this.settingDataTable = this.$editorUtil.deepCopy(this.settingData);
+      if (this.settingData.paramFieldMapping) {
+        let tmps = this.$editorUtil.deepCopy(
+          this.settingData.paramFieldMapping
+        );
+        tmps.forEach((item) => (item.id = uuidv4()));
+        this.mappingData = tmps;
+      } else {
+        this.mappingData = [];
+      }
+      this.$refs.entityFieldMapping.loadInputSource()
       this.mappingModalVisible = true;
-    },
-
-    getEmptyInConfig() {
-      return {
-        dest: "",
-        srcType: "returnValue", //来源类型 returnValue，expression
-        srcCode: this.itemData.editorKey,
-        srcSetting: "",
-        destFieldMapping: null,
-      };
     },
   },
 
   mounted() {
     this.value =
       this.itemData.userData.paramSourceValue || this.itemData.default || "";
-    this.settingData = [this.getEmptyInConfig()];
+    this.settingData.paramCode = this.itemData.editorKey;
   },
   watch: {
     settingData: {
       handler(newValue, oldValue) {
-        this.valueDisplay = newValue[0].dest != "" ? "已设置" : "";
+        this.valueDisplay = newValue.paramSourceValue != "" ? "已设置" : "";
       },
       deep: true,
     },
