@@ -56,8 +56,12 @@
             updateTableRow(row, index);
           "
         >
-          <Option :value="1">{{ 1 }}</Option>
-          <Option :value="2">{{ 2 }}</Option>
+           <Option
+            v-for="item in deEntityFields"
+            :value="item.value"
+            :key="item.value"
+            >{{ item.name }}</Option
+          >
         </Select>
       </template>
       <template slot-scope="{ row, index }" slot="srcTypeSlot">
@@ -82,6 +86,7 @@
       <template slot-scope="{ row, index }" slot="srcValueSlot">
         <Select
           style="width: 100%"
+          :value="row.srcValue"
           transfer
           :size="$editorUtil.itemStyle.itemInputSize"
           @on-change="
@@ -89,8 +94,12 @@
             updateTableRow(row, index);
           "
         >
-          <Option :value="1">{{ 1 }}</Option>
-          <Option :value="2">{{ 2 }}</Option>
+          <Option
+            v-for="item in sourceFiledItems"
+            :value="item.value"
+            :key="item.value"
+            >{{ item.name }}</Option
+          >
         </Select>
       </template>
       <template slot-scope="{ row, index }" slot="actionSlot">
@@ -115,12 +124,13 @@
 
 <script>
 import { createNamespacedHelpers } from "vuex";
-const { mapState } = createNamespacedHelpers("ruleEditorStore");
+const { mapState,mapGetters } = createNamespacedHelpers("ruleEditorStore");
 
 export default {
   props: {
     data: Array,
     showModal: Boolean,
+    context: [Object, Array, String],
   },
   model: {
     prop: "showModal",
@@ -160,6 +170,8 @@ export default {
         // ,
         // { name: "表达式", value: "expression" },
       ],
+      deEntityFields: [],
+      srcEntityFields: [],
     };
   },
   computed: {
@@ -167,13 +179,93 @@ export default {
     settingDataTable() {
       return this.data;
     },
+    destFiledItems() {
+      debugger
+     let items = new Array();
+      let meta = this.getOutputMetaInfo()(this.context.editorKey);
+      if (meta && meta.entityInfo && meta.entityInfo.entityField) {
+        meta.entityInfo.entityField.forEach((entity) => {
+          items.push({
+            name: entity.code + (entity.name ? "(" + entity.name + ")" : ""),
+            value: entity.code,
+          });
+        });
+      }
+      srcEntityFields=items;
+      this.$editorUtil
+        .getEntityFields("ruleSetOutput", this.context.userData.dest)
+        .then((items) => {
+          let returnValue = [];
+          debugger;
+          if (items) {
+            for (const key in items) {
+              if (items.hasOwnProperty(key)) {
+                const item = items[key];
+                returnValue.push({
+                  name: item,
+                  value: key,
+                });
+              }
+            }
+          }
+         this.deEntityFields = returnValue;
+        });
+    },
+     sourceFiledItems() {
+      let items = new Array();
+      debugger;
+      let meta = this.getOutputMetaInfo()(this.context.editorKey);
+      if (meta && meta.entityInfo && meta.entityInfo.entityField) {
+        meta.entityInfo.entityField.forEach((entity) => {
+          items.push({
+            name: entity.code + (entity.name ? "(" + entity.name + ")" : ""),
+            value: entity.code,
+          });
+        });
+      }
+      return items;
+    },
   },
   // 生命周期 - 创建完成（可以访问当前this实例）
   created() {},
   // 生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
+  mounted() {
+    this.$editorUtil
+        .getEntityFields("ruleSetOutput", this.context.userData.dest)
+        .then((items) => {
+          let returnValue = [];
+          debugger;
+          if (items) {
+            for (const key in items) {
+              if (items.hasOwnProperty(key)) {
+                const item = items[key];
+                returnValue.push({
+                  name: item,
+                  value: key,
+                });
+              }
+            }
+          }
+         this.deEntityFields = returnValue;
+        });
+
+        let items = new Array();
+      debugger;
+      let meta = this.getOutputMetaInfo()(this.context.editorKey);
+      if (meta && meta.entityInfo && meta.entityInfo.entityField) {
+        meta.entityInfo.entityField.forEach((entity) => {
+          items.push({
+            name: entity.code + (entity.name ? "(" + entity.name + ")" : ""),
+            value: entity.code,
+          });
+        });
+      }
+      
+    
+  },
   // 方法集合
   methods: {
+      ...mapGetters(["getOutputMetaInfo"]),
     show(context) {
       debugger;
       this.dataContext = context;

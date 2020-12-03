@@ -218,18 +218,22 @@ editorUtil.mergeData = function (contribution, editorMeta, metaData, userData) {
         return;
 
     let index = 0;
-    let buildUserData = (data) => {
+    let buildUserData = (data, nodekey) => {
         let tmp = {}
         if (data) {
             data.forEach(d => {
-                tmp[d.paramCode] = d;
+                if (nodekey == "ruleInputParams")
+                    tmp[d.paramCode] = d;
+                else if (nodekey == "ruleOutputParams") {
+                    tmp[d.srcCode] = d;
+                }
             });
         }
         return tmp;
     };
 
-    const merage = (data, user) => {
-        let newUserData = buildUserData(user);
+    const merage = (data, user,nodekey) => {
+        let newUserData = buildUserData(user,nodekey);
         for (const key in data) {
             if (data.hasOwnProperty(key)) {
                 const meta = data[key];
@@ -242,8 +246,8 @@ editorUtil.mergeData = function (contribution, editorMeta, metaData, userData) {
             }
         }
     }
-    merage(contribution.inputs, userData ? userData.ruleInputParams : null);
-    merage(contribution.outputs, userData ? userData.ruleOutputParams : null);
+    merage(contribution.inputs, userData ? userData.ruleInputParams : null,"ruleInputParams");
+    merage(contribution.outputs, userData ? userData.ruleOutputParams : null,"ruleOutputParams");
 }
 
 /**
