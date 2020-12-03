@@ -84,7 +84,7 @@
         <Select
           style="width: 100%"
           transfer
-          :value="row.fieldValueType"
+          v-model="row.fieldValueType"
           :size="$editorUtil.itemStyle.itemInputSize"
           @on-change="onFieldValueTypeChanged($event, row, index)"
         >
@@ -110,7 +110,7 @@
           v-else
           style="width: 100%"
           transfer
-          :value="row.fieldValue"
+          v-model="row.fieldValue"
           :size="$editorUtil.itemStyle.itemInputSize"
           @on-change="
             row.fieldValue = $event;
@@ -168,10 +168,31 @@ export default {
         items.push({
           name: entity.code + (entity.name ? "(" + entity.name + ")" : ""),
           value: entity.code,
+          type: entity.type,
         });
       });
     }
+    //加载 目标 选项（来自规则元数据）
     this.targetItems = items;
+
+    let _this = this;
+    this.$editorUtil.loadInputSourceDetails().then((items) => {
+      let returnValue = [];
+      if (items) {
+        for (const key in items) {
+          if (items.hasOwnProperty(key)) {
+            const item = items[key];
+            returnValue.push({
+              name: item.text,
+              value: key,
+              details: item.value,
+            });
+          }
+        }
+      }
+      //来源来源实体类型
+      _this.sourceTypeItems = returnValue;
+    });
   },
   data() {
     // 这里存放数据
@@ -255,25 +276,20 @@ export default {
     updateTableRow(row, index) {
       this.settingDataTable[index] = row;
     },
-    loadInputSource() {
-      let _this = this;
-      this.$editorUtil.loadInputSourceDetails().then((items) => {
-        let returnValue = [];
-        if (items) {
-          for (const key in items) {
-            if (items.hasOwnProperty(key)) {
-              const item = items[key];
-              returnValue.push({
-                name: item.text,
-                value: key,
-                details: item.value,
-              });
-            }
-          }
-        }
-        this.sourceTypeItems = returnValue;
-      });
+    /**
+     * 加载当前窗体数据（下拉项、数据还原等），在这窗体显示的时候调用
+     */
+    load(settingData) {
+      debugger;
+      this.selectedSourceType = settingData.paramSourceType;
+      this.onSourceTypeChanged(this.selectedSourceType);
+
+      this.selectedEntity = settingData.paramSourceValue;
+      this.onSourceEntityChanged(this.selectedEntity);
     },
+    /**
+     * 来数据类型改变- 加载改来源的实体选项
+     */
     onSourceTypeChanged(sourceValue) {
       this.sourceEntityItems = [];
       this.sourceEntityFields = [];
@@ -290,12 +306,15 @@ export default {
         }
       }
     },
+
+    /**
+     * 实体改变，加载他的字段（列表中的来源列的下拉候选项）
+     */
     onSourceEntityChanged(entityCode) {
       this.$editorUtil
         .getEntityFields(this.selectedSourceType, entityCode)
         .then((items) => {
           let returnValue = [];
-          debugger;
           if (items) {
             for (const key in items) {
               if (items.hasOwnProperty(key)) {

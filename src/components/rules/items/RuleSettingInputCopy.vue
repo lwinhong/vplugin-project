@@ -105,20 +105,29 @@ export default {
           });
         });
       }
+      let mappingEditor = this.$refs.entityFieldMapping;
+      this.settingData.paramSourceValue =mappingEditor.selectedEntity;
+      this.settingData.paramSourceType = mappingEditor.selectedSourceType;
+
       this.mappingData = [];
     },
 
     openEntityFieldMappingEditor(row, index) {
       if (this.settingData.paramFieldMapping) {
-        let tmps = this.$editorUtil.deepCopy(
-          this.settingData.paramFieldMapping
-        );
-        tmps.forEach((item) => (item.id = uuidv4()));
-        this.mappingData = tmps;
+        let mapping = [];
+        this.settingData.paramFieldMapping.forEach((item) => {
+          mapping.push({
+            id: uuidv4(),
+            paramEntityField: item.paramEntityField,
+            fieldValueType: item.fieldValueType,
+            fieldValue: item.fieldValue,
+          });
+        });
+        this.mappingData = mapping;
       } else {
         this.mappingData = [];
       }
-      this.$refs.entityFieldMapping.loadInputSource();
+      this.$refs.entityFieldMapping.load(this.settingData);
       this.mappingModalVisible = true;
     },
   },
@@ -127,6 +136,14 @@ export default {
     this.value =
       this.itemData.userData.paramSourceValue || this.itemData.default || "";
     this.settingData.paramCode = this.itemData.editorKey;
+
+    if (this.itemData.userData) {
+      this.settingData.paramSourceValue = this.itemData.userData.paramSourceValue;
+      this.settingData.paramSourceType = this.itemData.userData.paramSourceType;
+      if (this.itemData.userData.paramFieldMapping) {
+        this.settingData.paramFieldMapping = this.itemData.userData.paramFieldMapping;
+      }
+    }
   },
   watch: {
     settingData: {
