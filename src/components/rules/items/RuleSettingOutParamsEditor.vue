@@ -138,7 +138,7 @@
       v-model="mappingModalVisible"
       mask
       :mask-closable="false"
-      title="规则返回值设置"
+      title="返回值实体字段设置"
       :width="800"
       @on-ok="onEntityFieldMappingOk"
     >

@@ -33,7 +33,7 @@
       v-model="mappingModalVisible"
       mask
       :mask-closable="false"
-      title="方法实体字段映射"
+      title="规则返回值设置"
       :width="800"
       @on-ok="mappingOk"
     >
