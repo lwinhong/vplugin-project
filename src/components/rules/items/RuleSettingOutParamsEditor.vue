@@ -300,6 +300,8 @@ export default {
             );
           } else this.settingMappingData = new Array();
         }
+        debugger
+        this.$refs.entityFieldMapping.destFiledItems(this.settingDataTable[0].dest);
         this.mappingModalVisible = true;
         return;
       }
