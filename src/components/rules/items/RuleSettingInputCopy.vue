@@ -73,13 +73,10 @@ export default {
     save() {
       let result = {};
       result.paramCode = this.itemData.editorKey; //来源，也是元数据key，固定
-      if (this.settingData && this.settingData.length > 0) {
-        let settingData = this.settingData[0];
+      result.paramSourceValue = this.settingData.paramSourceValue;
+      result.paramSourceType = this.settingData.paramSourceType;
+      result.paramFieldMapping = this.settingData.paramFieldMapping;
 
-        result.paramSourceValue = settingData.paramSourceValue;
-        result.paramSourceType = settingData.paramSourceType;
-        result.paramFieldMapping = settingData.paramFieldMapping;
-      }
       return result;
     },
     onSettingClick(cmd) {
@@ -97,23 +94,40 @@ export default {
       return key;
     },
     onEntityFieldMappingOk() {
-      this.settingData.paramFieldMapping = this.$editorUtil.deepCopy(
-        this.mappingData
-      );
+      debugger;
+      this.settingData.paramFieldMapping = [];
+      if (this.mappingData) {
+        this.mappingData.forEach((mapping) => {
+          this.settingData.paramFieldMapping.push({
+            paramEntityField: mapping.paramEntityField,
+            fieldValueType: mapping.fieldValueType,
+            fieldValue: mapping.fieldValue,
+          });
+        });
+      }
+      let mappingEditor = this.$refs.entityFieldMapping;
+      this.settingData.paramSourceValue =mappingEditor.selectedEntity;
+      this.settingData.paramSourceType = mappingEditor.selectedSourceType;
+
       this.mappingData = [];
     },
 
     openEntityFieldMappingEditor(row, index) {
       if (this.settingData.paramFieldMapping) {
-        let tmps = this.$editorUtil.deepCopy(
-          this.settingData.paramFieldMapping
-        );
-        tmps.forEach((item) => (item.id = uuidv4()));
-        this.mappingData = tmps;
+        let mapping = [];
+        this.settingData.paramFieldMapping.forEach((item) => {
+          mapping.push({
+            id: uuidv4(),
+            paramEntityField: item.paramEntityField,
+            fieldValueType: item.fieldValueType,
+            fieldValue: item.fieldValue,
+          });
+        });
+        this.mappingData = mapping;
       } else {
         this.mappingData = [];
       }
-      this.$refs.entityFieldMapping.loadInputSource()
+      this.$refs.entityFieldMapping.load(this.settingData);
       this.mappingModalVisible = true;
     },
   },
@@ -122,11 +136,19 @@ export default {
     this.value =
       this.itemData.userData.paramSourceValue || this.itemData.default || "";
     this.settingData.paramCode = this.itemData.editorKey;
+
+    if (this.itemData.userData) {
+      this.settingData.paramSourceValue = this.itemData.userData.paramSourceValue;
+      this.settingData.paramSourceType = this.itemData.userData.paramSourceType;
+      if (this.itemData.userData.paramFieldMapping) {
+        this.settingData.paramFieldMapping = this.itemData.userData.paramFieldMapping;
+      }
+    }
   },
   watch: {
     settingData: {
       handler(newValue, oldValue) {
-        this.valueDisplay = newValue.paramSourceValue != "" ? "已设置" : "";
+        this.valueDisplay = newValue.paramFieldMapping != "" ? "已设置" : "";
       },
       deep: true,
     },

@@ -55,9 +55,9 @@ const app = new Vue({
         window.vPlugin.execute("appMounted");
       } else {
         _onLoad(test.contribution, test.newMetaData, test.userData);
-        if (test.dests) {
-          app.setAllDestDetailsAction(test.dests);
-        }
+        // if (test.dests) {
+        //   app.setAllDestDetailsAction(test.dests);
+        // }
 
       }
     }, 100);

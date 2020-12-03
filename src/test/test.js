@@ -350,7 +350,17 @@ const userData = {
         "paramSourceType": "expression",
         "paramSourceValue": true
     }, {
-        "paramCode": "inputentity"
+        "paramCode": "inputentity",
+        "paramSourceValue": "ruleSetInput",
+        "paramSourceType": "Entityinput",
+        "paramFieldMapping": [
+            {
+                "paramEntityField": "inputFiledbool",
+                "fieldValueType": "field",
+                "fieldValue": "birthday_end"
+            }
+        ]
+
     }, {
         "paramCode": "inputdropdown",
         "paramSourceType": "expression",
@@ -901,5 +911,5 @@ const dests = {
 
 
 export default {
-    userData, contribution, newMetaData:metaData, dests
+    userData, contribution, newMetaData: metaData, dests
 }
