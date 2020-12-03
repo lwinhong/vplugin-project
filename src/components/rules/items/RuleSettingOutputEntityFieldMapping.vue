@@ -234,7 +234,6 @@ export default {
         .getEntityFields("ruleSetOutput", this.context.userData.dest)
         .then((items) => {
           let returnValue = [];
-          debugger;
           if (items) {
             for (const key in items) {
               if (items.hasOwnProperty(key)) {
@@ -248,20 +247,6 @@ export default {
           }
          this.deEntityFields = returnValue;
         });
-
-        let items = new Array();
-      debugger;
-      let meta = this.getOutputMetaInfo()(this.context.editorKey);
-      if (meta && meta.entityInfo && meta.entityInfo.entityField) {
-        meta.entityInfo.entityField.forEach((entity) => {
-          items.push({
-            name: entity.code + (entity.name ? "(" + entity.name + ")" : ""),
-            value: entity.code,
-          });
-        });
-      }
-      
-    
   },
   // 方法集合
   methods: {

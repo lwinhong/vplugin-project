@@ -138,7 +138,7 @@
       v-model="mappingModalVisible"
       mask
       :mask-closable="false"
-      title="活动集参数映射"
+      title="规则返回值设置"
       :width="800"
       @on-ok="onEntityFieldMappingOk"
     >
