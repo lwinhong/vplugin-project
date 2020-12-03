@@ -138,7 +138,7 @@
       v-model="mappingModalVisible"
       mask
       :mask-closable="false"
-      title="活动集参数映射"
+      title="返回值实体字段设置"
       :width="800"
       @on-ok="onEntityFieldMappingOk"
     >
@@ -300,6 +300,8 @@ export default {
             );
           } else this.settingMappingData = new Array();
         }
+        debugger
+        this.$refs.entityFieldMapping.destFiledItems(this.settingDataTable[0].dest);
         this.mappingModalVisible = true;
         return;
       }

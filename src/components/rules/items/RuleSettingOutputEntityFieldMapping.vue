@@ -179,38 +179,7 @@ export default {
     settingDataTable() {
       return this.data;
     },
-    destFiledItems() {
-      debugger
-     let items = new Array();
-      let meta = this.getOutputMetaInfo()(this.context.editorKey);
-      if (meta && meta.entityInfo && meta.entityInfo.entityField) {
-        meta.entityInfo.entityField.forEach((entity) => {
-          items.push({
-            name: entity.code + (entity.name ? "(" + entity.name + ")" : ""),
-            value: entity.code,
-          });
-        });
-      }
-      srcEntityFields=items;
-      this.$editorUtil
-        .getEntityFields("ruleSetOutput", this.context.userData.dest)
-        .then((items) => {
-          let returnValue = [];
-          debugger;
-          if (items) {
-            for (const key in items) {
-              if (items.hasOwnProperty(key)) {
-                const item = items[key];
-                returnValue.push({
-                  name: item,
-                  value: key,
-                });
-              }
-            }
-          }
-         this.deEntityFields = returnValue;
-        });
-    },
+    
      sourceFiledItems() {
       let items = new Array();
       debugger;
@@ -230,11 +199,38 @@ export default {
   created() {},
   // 生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    this.$editorUtil
-        .getEntityFields("ruleSetOutput", this.context.userData.dest)
+    debugger
+    // this.$editorUtil
+    //     .getEntityFields("ruleSetOutput", this.context.userData.dest)
+    //     .then((items) => {
+    //       let returnValue = [];
+    //       if (items) {
+    //         for (const key in items) {
+    //           if (items.hasOwnProperty(key)) {
+    //             const item = items[key];
+    //             returnValue.push({
+    //               name: item,
+    //               value: key,
+    //             });
+    //           }
+    //         }
+    //       }
+    //      this.deEntityFields = returnValue;
+    //     });
+  },
+  // 方法集合
+  methods: {
+      ...mapGetters(["getOutputMetaInfo"]),
+    show(context) {
+      this.dataContext = context;
+      this.visible = true;
+    },
+    destFiledItems(dest) {
+      debugger
+      this.$editorUtil
+        .getEntityFields("ruleSetOutput", dest)
         .then((items) => {
           let returnValue = [];
-          debugger;
           if (items) {
             for (const key in items) {
               if (items.hasOwnProperty(key)) {
@@ -248,28 +244,6 @@ export default {
           }
          this.deEntityFields = returnValue;
         });
-
-        let items = new Array();
-      debugger;
-      let meta = this.getOutputMetaInfo()(this.context.editorKey);
-      if (meta && meta.entityInfo && meta.entityInfo.entityField) {
-        meta.entityInfo.entityField.forEach((entity) => {
-          items.push({
-            name: entity.code + (entity.name ? "(" + entity.name + ")" : ""),
-            value: entity.code,
-          });
-        });
-      }
-      
-    
-  },
-  // 方法集合
-  methods: {
-      ...mapGetters(["getOutputMetaInfo"]),
-    show(context) {
-      debugger;
-      this.dataContext = context;
-      this.visible = true;
     },
     ok() {
       let mapping = [];

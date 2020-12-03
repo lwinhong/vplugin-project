@@ -33,7 +33,7 @@
       v-model="mappingModalVisible"
       mask
       :mask-closable="false"
-      title="方法实体字段映射"
+      title="规则返回值设置"
       :width="800"
       @on-ok="mappingOk"
     >
@@ -99,6 +99,7 @@ export default {
       return result;
     },
     onPopup() {
+      debugger;
       this.settingDataTable = this.$editorUtil.deepCopy(this.settingData);
       this.mappingModalVisible = true;
     },
@@ -122,12 +123,12 @@ export default {
     },
     getEmptyOutConfig() {
       return {
-        dest: this.itemData.userData.dest,
-        destType: this.itemData.userData.destType,
+        dest: "",
+        destType: "",
         srcType: "returnValue", //来源类型 returnValue，expression
         srcCode: this.itemData.editorKey,
         srcSetting: "",
-        destFieldMapping: this.itemData.userData.destFieldMapping
+        destFieldMapping: null,
       };
     },
   },
@@ -139,6 +140,10 @@ export default {
     empty.destFieldMapping = this.itemData.userData
       ? this.itemData.userData.destFieldMapping
       : null;
+    empty.dest = this.itemData.userData
+      ?this.itemData.userData.dest:"";
+    empty.destType =this.itemData.userData
+      ? this.itemData.userData.destType:"";
     this.settingData = [empty];
   },
   watch: {
