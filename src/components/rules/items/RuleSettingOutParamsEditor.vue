@@ -143,7 +143,7 @@
       @on-ok="onEntityFieldMappingOk"
     >
       <RuleSettingOutputEntityFieldMapping
-        :data="settingMappingData"
+        :data="settingMappingData" :context="context"
         ref="entityFieldMapping"
     /></Modal>
   </div>
@@ -211,15 +211,22 @@ export default {
           if (element.details != null) {
             for (let i = 0; i < element.details.length; i++) {
               const item = element.details[i];
-              if (item.DataType ==  info.type) {
+              if (item.DataType == info.type) {
                 result.push(element);
               }
-            
             }
           }
         }
       }
-
+      let dests = new Array();
+      result.forEach((item) => {
+        if (item.details) {
+          item.details.forEach((dest) => {
+            dests.push({ name: dest.CodeName, value: dest.Code });
+          });
+        }
+      });
+      this.destItems = dests;
       return result;
     },
   },

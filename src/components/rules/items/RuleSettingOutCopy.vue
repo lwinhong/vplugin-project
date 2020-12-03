@@ -122,12 +122,12 @@ export default {
     },
     getEmptyOutConfig() {
       return {
-        dest: "",
-        destType: "",
+        dest: this.itemData.userData.dest,
+        destType: this.itemData.userData.destType,
         srcType: "returnValue", //来源类型 returnValue，expression
         srcCode: this.itemData.editorKey,
         srcSetting: "",
-        destFieldMapping: null,
+        destFieldMapping: this.itemData.userData.destFieldMapping
       };
     },
   },
