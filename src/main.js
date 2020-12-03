@@ -105,7 +105,7 @@ const _onLoad = (contribution, metaData, userData, dests) => {
         if (!dest)
           dest = await editorUtil.loadDestDetails();
         if (dest)
-          app.setAllDestDetailsAction(dests);
+          app.setAllDestDetailsAction(dest);
       }
 
       console.log("allDone")
