@@ -3,7 +3,6 @@
     <div>
       <span>来源实体: </span>
       <Select
-        :size="$editorUtil.itemStyle.itemInputSize"
         style="width: 210px"
         @on-change="onSourceTypeChanged"
         v-model="selectedSourceType"
@@ -16,7 +15,6 @@
         >
       </Select>
       <Select
-        :size="$editorUtil.itemStyle.itemInputSize"
         v-model="selectedEntity"
         style="width: 210px"
         @on-change="onSourceEntityChanged"
@@ -29,25 +27,21 @@
         >
       </Select>
     </div>
-    <div>
+    <div class="tableToolbar">
       <Button
         type="text"
-        :size="$editorUtil.itemStyle.itemInputSize"
         icon="md-add"
         @click="addNewRow"
       >
         新增</Button
       >
-      <Divider type="vertical" :size="$editorUtil.itemStyle.itemInputSize" />
-      <Button
+      <Button v-show="false"
         type="text"
-        :size="$editorUtil.itemStyle.itemInputSize"
         icon="md-done-all"
         >引入全部</Button
       >
       <Button
         type="text"
-        :size="$editorUtil.itemStyle.itemInputSize"
         icon="md-close"
         @click="clear"
         >清空</Button
@@ -56,17 +50,14 @@
     <Table
       :data="settingDataTable"
       :columns="columns"
-      :size="$editorUtil.itemStyle.itemInputSize"
       border
       highlight-row
       @on-current-change="tableCurrentChange"
     >
       <template slot-scope="{ row, index }" slot="paramEntityFieldSlot">
         <Select
-          style="width: 100%"
           transfer
           :value="row.paramEntityField"
-          :size="$editorUtil.itemStyle.itemInputSize"
           @on-change="
             row.paramEntityField = $event;
             updateTableRow(row, index);
@@ -82,10 +73,8 @@
       </template>
       <template slot-scope="{ row, index }" slot="fieldValueTypeSlot">
         <Select
-          style="width: 100%"
           transfer
           v-model="row.fieldValueType"
-          :size="$editorUtil.itemStyle.itemInputSize"
           @on-change="onFieldValueTypeChanged($event, row, index)"
         >
           <Option
@@ -98,20 +87,22 @@
       </template>
       <template slot-scope="{ row, index }" slot="fieldValueSlot">
         <div v-if="row.fieldValueType == 'expression'">
-          <span>{{ row.fieldValue }}</span>
-          <Button
-            icon="md-open"
-            type="text"
-            :size="$editorUtil.itemStyle.itemInputSize"
-            @click="openExpressionEditor(row, index)"
-          ></Button>
+          <Input
+            v-model="row.fieldValue "
+            placeholder="未设置"
+            readonly
+          >
+            <Button
+              icon="md-open"
+              slot="append"
+              @click="openExpressionEditor(row, index)"
+            ></Button
+          ></Input>
         </div>
         <Select
           v-else
-          style="width: 100%"
           transfer
           v-model="row.fieldValue"
-          :size="$editorUtil.itemStyle.itemInputSize"
           @on-change="
             row.fieldValue = $event;
             updateTableRow(row, index);
@@ -126,15 +117,9 @@
         </Select>
       </template>
       <template slot-scope="{ row, index }" slot="actionSlot">
-        <!-- <Button
-          type="primary"
-          :size="$editorUtil.itemStyle.itemInputSize"
-          @click="addNewRow(index)"
-          >新增</Button
-        > -->
         <Button
+          slot="append"
           type="error"
-          :size="$editorUtil.itemStyle.itemInputSize"
           @click="removeRow(index, row.id)"
           >移除</Button
         >
@@ -224,7 +209,7 @@ export default {
         },
       ],
       srcTypes: [
-        { name: "字段", value: "field" },
+        { name: "实体字段", value: "field" },
         { name: "表达式", value: "expression" },
       ],
       currentRow: null,
@@ -256,13 +241,14 @@ export default {
       this.settingDataTable.push(item);
     },
     removeRow(index, id) {
-      for (let i = 0; i < this.settingDataTable.length; i++) {
-        const element = this.settingDataTable[i];
-        if (element.id == id) {
-          this.settingDataTable.splice(i, 1);
-          break;
-        }
-      }
+      // for (let i = 0; i < this.settingDataTable.length; i++) {
+      //   const element = this.settingDataTable[i];
+      //   if (element.id == id) {
+      //     this.settingDataTable.splice(i, 1);
+      //     break;
+      //   }
+      // }
+      this.settingDataTable.splice(index, 1);
     },
     newRow() {
       let item = {
@@ -280,7 +266,6 @@ export default {
      * 加载当前窗体数据（下拉项、数据还原等），在这窗体显示的时候调用
      */
     load(settingData) {
-      debugger;
       this.selectedSourceType = settingData.paramSourceType;
       this.onSourceTypeChanged(this.selectedSourceType);
 

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import ViewUI from "view-design";
-import 'view-design/dist/styles/iview.css';
+//import 'view-design/dist/styles/iview.css';//默认的官方路径
+import "./styles/iview.css";//重写了样式，使用这个路径
 import store from './store';
 import editorUtil from "./libs/editorUtil";
 import viewLoader from "./components/viewLoader";
@@ -54,7 +55,7 @@ const app = new Vue({
       if (window.vPlugin) {
         window.vPlugin.execute("appMounted");
       } else {
-        _onLoad(test.contribution, test.newMetaData, test.userData);
+        _onLoad(test.contribution, test.newMetaData, test.userData, test.dests);
         // if (test.dests) {
         //   app.setAllDestDetailsAction(test.dests);
         // }
@@ -87,7 +88,7 @@ const onLoad = function (data) {
  * @param {用户数据（保存数据）} userData 
  * @param {插件上下文} context 
  */
-const _onLoad = (contribution, metaData, userData, context) => {
+const _onLoad = (contribution, metaData, userData, dests) => {
   app.setEditorTypeAction(editorType)
   let init = async () => {
     let editorMeta = null;
@@ -100,9 +101,11 @@ const _onLoad = (contribution, metaData, userData, context) => {
       app.setRuleMetaDataAction(metaData);
       app.setRuleEditorDataAction(editorMeta);
       if (editorMeta.outputs) {
-        let dest = await editorUtil.loadDestDetails();
+        let dest = dests;
+        if (!dest)
+          dest = await editorUtil.loadDestDetails();
         if (dest)
-          app.setAllDestDetailsAction(dest);
+          app.setAllDestDetailsAction(dests);
       }
 
       console.log("allDone")

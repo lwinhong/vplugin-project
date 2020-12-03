@@ -7,7 +7,6 @@
         placement="bottom-end"
         placeholder="请选择日期"
         v-model="value"
-        :size="$editorUtil.itemStyle.itemInputSize"
       ></DatePicker>
     </template>
   </item-template>

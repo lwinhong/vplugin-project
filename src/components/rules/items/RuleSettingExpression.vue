@@ -11,20 +11,14 @@
         :content="value"
         placement="bottom-start"
       > -->
-      <Input
-        v-model="valueDisplay"
-        placeholder="未设置"
-        readonly
-        style="width:210px;"
-        :size="$editorUtil.itemStyle.itemInputSize"
-      >
-        <Button
-          slot="append"
-          icon="md-open"
-          :size="$editorUtil.itemStyle.itemInputSize"
-          @click="onPopup"
-        />
-      </Input>
+        <Input
+          v-model="valueDisplay"
+          placeholder="未设置"
+          readonly
+          style="width: 210px"
+        >
+          <Button slot="append" icon="md-open" @click="onPopup" />
+        </Input>
       <!-- </Poptip> -->
     </template>
   </item-template>

@@ -10,7 +10,6 @@
         placeholder="请输入..."
         :type="inputType"
         clearable
-        :size="$editorUtil.itemStyle.itemInputSize"
         :autosize="{ minRows: 2, maxRows: 6 }"
       />
     </template>

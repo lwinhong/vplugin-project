@@ -6,34 +6,32 @@
       :value="value"
     >
       <template v-slot:content>
-        <Input
-          v-model="valueDisplay"
-          placeholder="未设置"
-          readonly
-          :size="$editorUtil.itemStyle.itemInputSize"
-          style="width: 210px"
-        >
-          <Button
-            slot="append"
-            icon="md-open"
-            @click="openEntityFieldMappingEditor"
-            :size="$editorUtil.itemStyle.itemInputSize"
-          />
-          <!-- <Poptip
+        <!-- <Poptip
           trigger="hover"
           title="详细配置"
           :content="value"
           placement="bottom-start"
         > -->
-          <!-- </Poptip> -->
-        </Input>
+          <Input
+            v-model="valueDisplay"
+            placeholder="未设置"
+            readonly
+            style="width: 210px"
+          >
+            <Button
+              slot="append"
+              icon="md-open"
+              @click="openEntityFieldMappingEditor"
+            />
+          </Input>
+        <!-- </Poptip> -->
       </template>
     </item-template>
     <Modal
       v-model="mappingModalVisible"
       mask
       :mask-closable="false"
-      title="活动集参数映射"
+      title="规则入参设置"
       :width="800"
       @on-ok="onEntityFieldMappingOk"
     >
@@ -46,10 +44,8 @@
 </template>
 <script>
 import { v4 as uuidv4 } from "uuid";
-//import RuleSettingEntityFieldMapping from "../ruleCommonEditor/RuleSettingEntityFieldMapping";
 export default {
   name: "RuleSettingInputCopy",
-  //components: { RuleSettingEntityFieldMapping },
   props: {
     itemData: [Object, Array],
   },
@@ -94,7 +90,6 @@ export default {
       return key;
     },
     onEntityFieldMappingOk() {
-      debugger;
       this.settingData.paramFieldMapping = [];
       if (this.mappingData) {
         this.mappingData.forEach((mapping) => {
@@ -106,7 +101,7 @@ export default {
         });
       }
       let mappingEditor = this.$refs.entityFieldMapping;
-      this.settingData.paramSourceValue =mappingEditor.selectedEntity;
+      this.settingData.paramSourceValue = mappingEditor.selectedEntity;
       this.settingData.paramSourceType = mappingEditor.selectedSourceType;
 
       this.mappingData = [];

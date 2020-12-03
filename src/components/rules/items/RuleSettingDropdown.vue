@@ -4,7 +4,7 @@
         {{scope}}
     </template> -->
     <template v-slot:content>
-      <Select v-model="value" :size="$editorUtil.itemStyle.itemInputSize">
+      <Select v-model="value">
         <Option
           v-for="item in itemData.dropdownData"
           :value="item.value"
@@ -28,7 +28,8 @@ export default {
     };
   },
   mounted() {
-    this.value = this.itemData.userData.paramSourceValue || this.itemData.default || "";
+    this.value =
+      this.itemData.userData.paramSourceValue || this.itemData.default || "";
   },
   props: {
     itemData: [Object, Array],

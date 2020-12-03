@@ -12,7 +12,6 @@
         v-model="value"
         placeholder="请输入..."
         :precision="precision"
-        :size="$editorUtil.itemStyle.itemInputSize"
       ></InputNumber>
     </template>
   </item-template>

@@ -1,62 +1,22 @@
 <template>
-  <!-- <Modal
-    v-model="visible"
-    mask
-    :mask-closable="false"
-    title="实体字段映射"
-    :width="800"
-    @on-ok="ok"
-    @on-cancel="cancel"
-  > -->
   <div>
     <div>
-      <Button
-        type="text"
-        :size="$editorUtil.itemStyle.itemInputSize"
-        icon="md-add"
-        @click="addNewRow"
-      >
-        新增</Button
-      >
-      <!-- <Button
-        type="text"
-        :size="$editorUtil.itemStyle.itemInputSize"
-        icon="md-remove"
-         @click="removeRow()"
-        >移除</Button
-      > -->
-      <Button
-        type="text"
-        :size="$editorUtil.itemStyle.itemInputSize"
-        icon="md-done-all"
-        >引入全部</Button
-      >
-      <Button
-        type="text"
-        :size="$editorUtil.itemStyle.itemInputSize"
-        icon="md-close"
-        >清空</Button
-      >
+      <Button type="text" icon="md-add" @click="addNewRow"> 新增</Button>
+      <Button v-show="false" type="text" icon="md-done-all">引入全部</Button>
+      <Button type="text" icon="md-close">清空</Button>
     </div>
-    <Table
-      :data="settingDataTable"
-      :columns="columns"
-      :size="$editorUtil.itemStyle.itemInputSize"
-      border
-      highlight-row
-    >
+    <Table :data="settingDataTable" :columns="columns" border highlight-row>
       <template slot-scope="{ row, index }" slot="destSlot">
         <Select
           style="width: 100%"
           transfer
           :value="row.destField"
-          :size="$editorUtil.itemStyle.itemInputSize"
           @on-change="
             row.destField = $event;
             updateTableRow(row, index);
           "
         >
-           <Option
+          <Option
             v-for="item in deEntityFields"
             :value="item.value"
             :key="item.value"
@@ -69,7 +29,6 @@
           style="width: 100%"
           transfer
           :value="row.srcValueType"
-          :size="$editorUtil.itemStyle.itemInputSize"
           @on-change="
             row.srcValueType = $event;
             updateTableRow(row, index);
@@ -88,7 +47,6 @@
           style="width: 100%"
           :value="row.srcValue"
           transfer
-          :size="$editorUtil.itemStyle.itemInputSize"
           @on-change="
             row.srcValue = $event;
             updateTableRow(row, index);
@@ -103,28 +61,20 @@
         </Select>
       </template>
       <template slot-scope="{ row, index }" slot="actionSlot">
-        <Button
+        <!-- <Button
           type="primary"
-          :size="$editorUtil.itemStyle.itemInputSize"
           @click="addNewRow(index)"
           >新增</Button
-        >
-        <Button
-          type="error"
-          :size="$editorUtil.itemStyle.itemInputSize"
-          @click="removeRow(index)"
-          >移除</Button
-        >
+        > -->
+        <Button type="error" @click="removeRow(index)">移除</Button>
       </template>
     </Table>
   </div>
-
-  <!-- </Modal> -->
 </template>
 
 <script>
 import { createNamespacedHelpers } from "vuex";
-const { mapState,mapGetters } = createNamespacedHelpers("ruleEditorStore");
+const { mapState, mapGetters } = createNamespacedHelpers("ruleEditorStore");
 
 export default {
   props: {
@@ -162,7 +112,7 @@ export default {
           key: "action",
           align: "center",
           slot: "actionSlot",
-          width: 140,
+          width: 80,
         },
       ],
       srcTypes: [
@@ -179,10 +129,9 @@ export default {
     settingDataTable() {
       return this.data;
     },
-    
-     sourceFiledItems() {
+
+    sourceFiledItems() {
       let items = new Array();
-      debugger;
       let meta = this.getOutputMetaInfo()(this.context.editorKey);
       if (meta && meta.entityInfo && meta.entityInfo.entityField) {
         meta.entityInfo.entityField.forEach((entity) => {
@@ -199,7 +148,6 @@ export default {
   created() {},
   // 生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
-    debugger
     // this.$editorUtil
     //     .getEntityFields("ruleSetOutput", this.context.userData.dest)
     //     .then((items) => {
@@ -220,34 +168,30 @@ export default {
   },
   // 方法集合
   methods: {
-      ...mapGetters(["getOutputMetaInfo"]),
+    ...mapGetters(["getOutputMetaInfo"]),
     show(context) {
       this.dataContext = context;
       this.visible = true;
     },
     destFiledItems(dest) {
-      debugger
-      this.$editorUtil
-        .getEntityFields("ruleSetOutput", dest)
-        .then((items) => {
-          let returnValue = [];
-          if (items) {
-            for (const key in items) {
-              if (items.hasOwnProperty(key)) {
-                const item = items[key];
-                returnValue.push({
-                  name: item,
-                  value: key,
-                });
-              }
+      this.$editorUtil.getEntityFields("ruleSetOutput", dest).then((items) => {
+        let returnValue = [];
+        if (items) {
+          for (const key in items) {
+            if (items.hasOwnProperty(key)) {
+              const item = items[key];
+              returnValue.push({
+                name: item,
+                value: key,
+              });
             }
           }
-         this.deEntityFields = returnValue;
-        });
+        }
+        this.deEntityFields = returnValue;
+      });
     },
     ok() {
       let mapping = [];
-      debugger;
       this.settingDataTable.forEach((mapping) => {
         let item = {
           destField: mapping.destField,

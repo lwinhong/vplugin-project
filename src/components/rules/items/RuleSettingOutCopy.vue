@@ -6,27 +6,21 @@
       :value="value"
     >
       <template v-slot:content>
-        <Input
-          v-model="valueDisplay"
-          placeholder="未设置"
-          readonly
-          :size="$editorUtil.itemStyle.itemInputSize"
-          style="width: 210px"
-        >
-          <Button
-            slot="append"
-            icon="md-open"
-            @click="onPopup"
-            :size="$editorUtil.itemStyle.itemInputSize"
-          />
-          <!-- <Poptip
+        <!-- <Poptip
           trigger="hover"
           title="详细配置"
           :content="value"
           placement="bottom-start"
         > -->
-          <!-- </Poptip> -->
-        </Input>
+          <Input
+            v-model="valueDisplay"
+            placeholder="未设置"
+            readonly
+            style="width: 210px"
+          >
+            <Button slot="append" icon="md-open" @click="onPopup" />
+          </Input>
+        <!-- </Poptip> -->
       </template>
     </item-template>
     <Modal
@@ -99,7 +93,6 @@ export default {
       return result;
     },
     onPopup() {
-      debugger;
       this.settingDataTable = this.$editorUtil.deepCopy(this.settingData);
       this.mappingModalVisible = true;
     },
@@ -118,7 +111,6 @@ export default {
       return key;
     },
     mappingOk() {
-      debugger;
       this.settingData = this.$editorUtil.deepCopy(this.settingDataTable);
     },
     getEmptyOutConfig() {
@@ -134,22 +126,20 @@ export default {
   },
 
   mounted() {
-    debugger;
     this.value = this.itemData.userData || this.itemData.default || "";
     let empty = this.getEmptyOutConfig();
     empty.destFieldMapping = this.itemData.userData
       ? this.itemData.userData.destFieldMapping
       : null;
-    empty.dest = this.itemData.userData
-      ?this.itemData.userData.dest:"";
-    empty.destType =this.itemData.userData
-      ? this.itemData.userData.destType:"";
+    empty.dest = this.itemData.userData ? this.itemData.userData.dest : "";
+    empty.destType = this.itemData.userData
+      ? this.itemData.userData.destType
+      : "";
     this.settingData = [empty];
   },
   watch: {
     settingData: {
       handler(newValue, oldValue) {
-        debugger;
         if (newValue[0].srcType == "returnValue") {
           this.valueDisplay = newValue[0].dest ? "已设置" : "";
           let info = this.getOutputMetaInfo(newValue[0].srcCode);
