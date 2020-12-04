@@ -28,24 +28,9 @@
       </Select>
     </div>
     <div class="tableToolbar">
-      <Button
-        type="text"
-        icon="md-add"
-        @click="addNewRow"
-      >
-        新增</Button
-      >
-      <Button v-show="false"
-        type="text"
-        icon="md-done-all"
-        >引入全部</Button
-      >
-      <Button
-        type="text"
-        icon="md-close"
-        @click="clear"
-        >清空</Button
-      >
+      <Button type="text" icon="md-add" @click="addNewRow"> 新增</Button>
+      <Button v-show="false" type="text" icon="md-done-all">引入全部</Button>
+      <Button type="text" icon="md-close" @click="clear">清空</Button>
     </div>
     <Table
       :data="settingDataTable"
@@ -87,15 +72,11 @@
       </template>
       <template slot-scope="{ row, index }" slot="fieldValueSlot">
         <div v-if="row.fieldValueType == 'expression'">
-          <Input
-            v-model="row.fieldValue "
-            placeholder="未设置"
-            readonly
-          >
+          <Input v-model="row.fieldValue" placeholder="未设置" readonly>
             <Button
               icon="md-open"
               slot="append"
-              @click="openExpressionEditor(row, index)"
+              @click="openExpressionEditor(row.fieldValue, row, index)"
             ></Button
           ></Input>
         </div>
@@ -117,10 +98,7 @@
         </Select>
       </template>
       <template slot-scope="{ row, index }" slot="actionSlot">
-        <Button
-          slot="append"
-          type="error"
-          @click="removeRow(index, row.id)"
+        <Button slot="append" type="error" @click="removeRow(index, row.id)"
           >移除</Button
         >
       </template>
@@ -319,19 +297,14 @@ export default {
       row.fieldValueType = value;
       this.updateTableRow(row, index);
     },
-    openExpressionEditor(row, index) {
+    openExpressionEditor(value, row, index) {
       let _this = this;
       if (window.vPlugin) {
         let callBack = (expression) => {
           row.fieldValue = expression;
           _this.updateTableRow(row, index);
         };
-        window.vPlugin.execute(
-          "openExpression",
-          row.srcCode,
-          //_this.itemData.type,
-          callBack
-        );
+        window.vPlugin.execute("openExpression", value, callBack);
       }
     },
   },
