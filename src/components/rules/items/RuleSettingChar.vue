@@ -33,7 +33,9 @@ export default {
     itemData: [Object, Array],
   },
   mounted() {
-    this.value = this.itemData.userData.paramSourceValue || this.itemData.default || "";
+    this.value = this.itemData.userData
+      ? this.itemData.userData.paramSourceValue
+      : this.itemData.default;
     //this.devHtml="<button>132</button>"
   },
   methods: {

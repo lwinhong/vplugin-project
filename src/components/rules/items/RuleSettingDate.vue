@@ -29,7 +29,9 @@ export default {
     itemData: [Object, Array],
   },
   mounted() {
-    this.value = this.itemData.userData.paramSourceValue || this.itemData.default || "";
+    this.value = this.itemData.userData
+      ? this.itemData.userData.paramSourceValue
+      : this.itemData.default;
   },
   // 方法集合
   methods: {

@@ -12,18 +12,18 @@
           :content="value"
           placement="bottom-start"
         > -->
-          <Input
-            v-model="valueDisplay"
-            placeholder="未设置"
-            readonly
-            style="width: 210px"
-          >
-            <Button
-              slot="append"
-              icon="md-open"
-              @click="openEntityFieldMappingEditor"
-            />
-          </Input>
+        <Input
+          v-model="valueDisplay"
+          placeholder="未设置"
+          readonly
+          style="width: 210px"
+        >
+          <Button
+            slot="append"
+            icon="md-open"
+            @click="openEntityFieldMappingEditor"
+          />
+        </Input>
         <!-- </Poptip> -->
       </template>
     </item-template>
@@ -90,10 +90,10 @@ export default {
       return key;
     },
     onEntityFieldMappingOk() {
-      this.settingData.paramFieldMapping = [];
+      let mappings = [];
       if (this.mappingData) {
         this.mappingData.forEach((mapping) => {
-          this.settingData.paramFieldMapping.push({
+          mappings.push({
             paramEntityField: mapping.paramEntityField,
             fieldValueType: mapping.fieldValueType,
             fieldValue: mapping.fieldValue,
@@ -101,6 +101,8 @@ export default {
         });
       }
       let mappingEditor = this.$refs.entityFieldMapping;
+
+      this.settingData.paramFieldMapping = mappings.length > 0 ? mappings : null;
       this.settingData.paramSourceValue = mappingEditor.selectedEntity;
       this.settingData.paramSourceType = mappingEditor.selectedSourceType;
 
@@ -108,8 +110,8 @@ export default {
     },
 
     openEntityFieldMappingEditor(row, index) {
+      let mapping = [];
       if (this.settingData.paramFieldMapping) {
-        let mapping = [];
         this.settingData.paramFieldMapping.forEach((item) => {
           mapping.push({
             id: uuidv4(),
@@ -118,18 +120,19 @@ export default {
             fieldValue: item.fieldValue,
           });
         });
-        this.mappingData = mapping;
-      } else {
-        this.mappingData = [];
       }
+
+      this.mappingData = mapping;
       this.$refs.entityFieldMapping.load(this.settingData);
       this.mappingModalVisible = true;
     },
   },
 
   mounted() {
-    this.value =
-      this.itemData.userData.paramSourceValue || this.itemData.default || "";
+    this.value = this.itemData.userData
+      ? this.itemData.userData.paramSourceValue
+      : this.itemData.default;
+
     this.settingData.paramCode = this.itemData.editorKey;
 
     if (this.itemData.userData) {
@@ -143,7 +146,7 @@ export default {
   watch: {
     settingData: {
       handler(newValue, oldValue) {
-        this.valueDisplay = newValue.paramFieldMapping != "" ? "已设置" : "";
+        this.valueDisplay = newValue.paramFieldMapping ? "已设置" : "";
       },
       deep: true,
     },

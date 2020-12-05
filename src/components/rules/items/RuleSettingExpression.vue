@@ -11,14 +11,14 @@
         :content="value"
         placement="bottom-start"
       > -->
-        <Input
-          v-model="valueDisplay"
-          placeholder="未设置"
-          readonly
-          style="width: 210px"
-        >
-          <Button slot="append" icon="md-open" @click="onPopup" />
-        </Input>
+      <Input
+        v-model="valueDisplay"
+        placeholder="未设置"
+        readonly
+        style="width: 210px"
+      >
+        <Button slot="append" icon="md-open" @click="onPopup" />
+      </Input>
       <!-- </Poptip> -->
     </template>
   </item-template>
@@ -69,8 +69,9 @@ export default {
     },
   },
   mounted() {
-    this.value =
-      this.itemData.userData.paramSourceValue || this.itemData.default || "";
+    this.value = this.itemData.userData
+      ? this.itemData.userData.paramSourceValue
+      : this.itemData.default;
   },
   watch: {
     value(newValue, oldValue) {

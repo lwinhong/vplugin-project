@@ -28,8 +28,9 @@ export default {
     };
   },
   mounted() {
-    this.value =
-      this.itemData.userData.paramSourceValue || this.itemData.default || "";
+    this.value = this.itemData.userData
+      ? this.itemData.userData.paramSourceValue
+      : this.itemData.default;
   },
   props: {
     itemData: [Object, Array],

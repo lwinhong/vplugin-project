@@ -25,7 +25,11 @@ export default {
     itemData: [Object, Array],
   },
   mounted() {
-    this.value = Boolean(this.itemData.userData.paramSourceValue || this.itemData.default);
+    if (this.itemData.userData)
+      this.value = Boolean(
+        this.itemData.userData.paramSourceValue || this.itemData.default
+      );
+    else this.value = Boolean(this.itemData.default);
   },
   // 方法集合
   methods: {

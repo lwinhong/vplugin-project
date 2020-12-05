@@ -34,7 +34,11 @@ export default {
     itemData: [Object, Array],
   },
   mounted() {
-    this.value = Number(this.itemData.userData.paramSourceValue || this.itemData.default);
+    this.value = Number(
+      this.itemData.userData
+        ? this.itemData.userData.paramSourceValue
+        : this.itemData.default
+    );
     //this.precision = 0;
   },
   methods: {

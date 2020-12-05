@@ -298,13 +298,22 @@ export default {
       this.updateTableRow(row, index);
     },
     openExpressionEditor(value, row, index) {
+      debugger
       let _this = this;
+      let dataType = ((key) => {
+        for (let i = 0; i < _this.targetItems.length; i++) {
+          const item = _this.targetItems[i];
+          if (item.value == key) return item.type;
+        }
+        return "";
+      })(row.paramEntityField);
+
       if (window.vPlugin) {
         let callBack = (expression) => {
           row.fieldValue = expression;
           _this.updateTableRow(row, index);
         };
-        window.vPlugin.execute("openExpression", value, callBack);
+        window.vPlugin.execute("openExpression", value, dataType, callBack);
       }
     },
   },
